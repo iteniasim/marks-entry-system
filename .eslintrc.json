@@ -1,0 +1,127 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:vue/vue3-strongly-recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module"
+    },
+    "env": {
+        "amd": true,
+        "browser": true,
+        "es6": true
+    },
+    "globals": {
+        "route": "readonly"
+    },
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "quotes": [
+            "warn",
+            "single"
+        ],
+        "semi": [
+            "warn",
+            "never"
+        ],
+        "no-unused-vars": [
+            "error",
+            {
+                "vars": "all",
+                "args": "after-used",
+                "ignoreRestSiblings": true
+            }
+        ],
+        "comma-dangle": [
+            "warn",
+            "always-multiline"
+        ],
+        "comma-spacing": [
+            "warn",
+            {
+                "before": false,
+                "after": true
+            }
+        ],
+        "vue/comma-spacing": [
+            "warn",
+            {
+                "before": false,
+                "after": true
+            }
+        ],
+        "object-curly-spacing": [
+            "warn",
+            "always"
+        ],
+        "key-spacing": [
+            "warn",
+            {
+                "beforeColon": false,
+                "afterColon": true
+            }
+        ],
+        "space-infix-ops": [
+            "warn",
+            {
+                "int32Hint": false
+            }
+        ],
+        "space-before-blocks": "warn",
+        "arrow-spacing": [
+            "error",
+            {
+                "before": true,
+                "after": true
+            }
+        ],
+        "lines-between-class-members": [
+            "warn",
+            "always"
+        ],
+        "vue/max-attributes-per-line": "off",
+        "vue/multi-word-component-names": "off",
+        "vue/require-default-prop": "off",
+        "vue/singleline-html-element-content-newline": "off",
+        "vue/html-self-closing": [
+            "warn",
+            {
+                "html": {
+                    "void": "always",
+                    "normal": "always",
+                    "component": "always"
+                }
+            }
+        ],
+        "vue/html-indent": [
+            "error",
+            4,
+            {
+                "attribute": 1,
+                "baseIndent": 1,
+                "closeBracket": 0,
+                "alignAttributesVertically": true,
+                "ignores": []
+            }
+        ],
+        "vue/space-infix-ops": [
+            "warn",
+            {
+                "int32Hint": false
+            }
+        ],
+        "vue/component-name-in-template-casing": [
+            "error",
+            "PascalCase",
+            {
+                "registeredComponentsOnly": true,
+                "ignores": []
+            }
+        ],
+        "no-undef": "error"
+    }
+}
