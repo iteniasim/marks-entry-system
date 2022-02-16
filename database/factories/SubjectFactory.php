@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Grade;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,8 @@ class SubjectFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => $this->faker->word(),
+            'grade_id' => Grade::pluck('id')->random(),
         ];
     }
 }

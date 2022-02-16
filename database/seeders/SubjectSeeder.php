@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Grade;
+use App\Models\Subject;
 use Illuminate\Database\Seeder;
 
 class SubjectSeeder extends Seeder
@@ -14,6 +15,12 @@ class SubjectSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $grades = Grade::all();
+
+        $grades->each(function ($grade) {
+            Subject::factory(7)->create([
+                'grade_id' => $grade->id,
+            ]);
+        });
     }
 }

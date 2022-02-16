@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Grade;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,10 @@ class StudentFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'roll_no' => $this->faker->randomNumber(2),
+            'grade_id' => Grade::pluck('id')->random(),
         ];
     }
 }

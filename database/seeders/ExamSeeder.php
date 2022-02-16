@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Exam;
 use Illuminate\Database\Seeder;
 
 class ExamSeeder extends Seeder
@@ -14,6 +14,10 @@ class ExamSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $exams = ['First Terminal', 'Second terminal', 'Third Terminal'];
+
+        foreach ($exams as $exam) {
+            Exam::create(['name' => $exam]);
+        }
     }
 }
