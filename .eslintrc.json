@@ -10,7 +10,8 @@
     "env": {
         "amd": true,
         "browser": true,
-        "es6": true
+        "es6": true,
+        "vue/setup-compiler-macros": true
     },
     "globals": {
         "route": "readonly"
@@ -47,9 +48,6 @@
                 "after": true
             }
         ],
-        "rules": {
-            "vue/script-setup-uses-vars": "error"
-        },
         "vue/comma-spacing": [
             "warn",
             {
