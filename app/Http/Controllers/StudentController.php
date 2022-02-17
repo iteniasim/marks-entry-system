@@ -16,7 +16,7 @@ class StudentController extends Controller
     public function index()
     {
         return inertia('Students/Index', [
-            'students' => Student::all(),
+            'students' => Student::with('grade')->get(),
         ]);
     }
 

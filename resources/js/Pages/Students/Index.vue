@@ -1,9 +1,12 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head } from '@inertiajs/inertia-vue3'
-import Table from '@/Components/Table.vue'
 
 const pageTitle = 'Students'
+
+const props = defineProps({
+    students: Object,
+})
 </script>
 
 <template>
@@ -17,69 +20,54 @@ const pageTitle = 'Students'
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                    <Table>
-                        <template #header>
-                            <tr>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                                >
-                                    Name
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                                >
-                                    Title
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                                >
-                                    Status
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                                >
-                                    Role
-                                </th>
-                                <th scope="col" class="relative px-6 py-3">
-                                    <span class="sr-only">Edit</span>
-                                </th>
-                            </tr>
-                        </template>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 w-10 h-10">
-                                        <img
-                                            class="w-10 h-10 rounded-full"
-                                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60"
-                                            alt
-                                        />
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">Jane Cooper</div>
-                                        <div class="text-sm text-gray-500">jane.cooper@example.com</div>
-                                    </div>
+                    <div class="flex flex-col">
+                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                                <div class="overflow-hidden">
+                                    <table class="min-w-full">
+                                        <thead class="bg-white border-b">
+                                            <tr>
+                                                <th scope="col" class="px-6 py-4 text-sm font-medium text-left text-gray-900">
+                                                    #
+                                                </th>
+                                                <th scope="col" class="px-6 py-4 text-sm font-medium text-left text-gray-900">
+                                                    First
+                                                </th>
+                                                <th scope="col" class="px-6 py-4 text-sm font-medium text-left text-gray-900">
+                                                    Last
+                                                </th>
+                                                <th scope="col" class="px-6 py-4 text-sm font-medium text-left text-gray-900">
+                                                    Roll
+                                                </th>
+                                                <th scope="col" class="px-6 py-4 text-sm font-medium text-left text-gray-900">
+                                                    Grade
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(student, index) in props.students" :key="`student-${index}`" class="border-b" :class="index % 2 == 0 ? 'bg-gray-100' : 'bg-white'">
+                                                <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                                    {{ index + 1 }}
+                                                </td>
+                                                <td class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap">
+                                                    {{ student.first_name }}
+                                                </td>
+                                                <td class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap">
+                                                    {{ student.last_name }}
+                                                </td>
+                                                <td class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap">
+                                                    {{ student.roll_no }}
+                                                </td>
+                                                <td class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap">
+                                                    {{ student.grade.name }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">Regional Paradigm Technician</div>
-                                <div class="text-sm text-gray-500">Optimization</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full"
-                                >Active</span>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">Admin</td>
-                            <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                            </td>
-                        </tr>
-                    </Table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
