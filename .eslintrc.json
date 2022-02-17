@@ -47,6 +47,9 @@
                 "after": true
             }
         ],
+        "rules": {
+            "vue/script-setup-uses-vars": "error"
+        },
         "vue/comma-spacing": [
             "warn",
             {
