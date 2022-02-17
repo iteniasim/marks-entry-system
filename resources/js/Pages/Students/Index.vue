@@ -28,9 +28,6 @@ const props = defineProps({
                                         <thead class="bg-white border-b">
                                             <tr>
                                                 <th scope="col" class="px-6 py-4 text-sm font-medium text-left text-gray-900">
-                                                    #
-                                                </th>
-                                                <th scope="col" class="px-6 py-4 text-sm font-medium text-left text-gray-900">
                                                     First
                                                 </th>
                                                 <th scope="col" class="px-6 py-4 text-sm font-medium text-left text-gray-900">
@@ -46,9 +43,6 @@ const props = defineProps({
                                         </thead>
                                         <tbody>
                                             <tr v-for="(student, index) in props.students" :key="`student-${index}`" class="border-b" :class="index % 2 == 0 ? 'bg-gray-100' : 'bg-white'">
-                                                <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
-                                                    {{ index + 1 }}
-                                                </td>
                                                 <td class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap">
                                                     {{ student.first_name }}
                                                 </td>
