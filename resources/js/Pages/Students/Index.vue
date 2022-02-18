@@ -17,6 +17,12 @@ const props = defineProps({
             <h2 class="text-xl font-semibold leading-tight text-gray-800">{{ pageTitle }}</h2>
         </template>
 
+        <template #actions>
+            <button class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 active:bg-blue-700 disabled:opacity-50">
+                Add
+            </button>
+        </template>
+
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
@@ -27,32 +33,57 @@ const props = defineProps({
                                     <table class="min-w-full">
                                         <thead class="bg-white border-b">
                                             <tr>
-                                                <th scope="col" class="px-6 py-4 text-sm font-medium text-left text-gray-900">
+                                                <th
+                                                    scope="col"
+                                                    class="px-6 py-4 text-sm font-medium text-left text-gray-900"
+                                                >
                                                     First
                                                 </th>
-                                                <th scope="col" class="px-6 py-4 text-sm font-medium text-left text-gray-900">
+                                                <th
+                                                    scope="col"
+                                                    class="px-6 py-4 text-sm font-medium text-left text-gray-900"
+                                                >
                                                     Last
                                                 </th>
-                                                <th scope="col" class="px-6 py-4 text-sm font-medium text-left text-gray-900">
+                                                <th
+                                                    scope="col"
+                                                    class="px-6 py-4 text-sm font-medium text-left text-gray-900"
+                                                >
                                                     Roll
                                                 </th>
-                                                <th scope="col" class="px-6 py-4 text-sm font-medium text-left text-gray-900">
+                                                <th
+                                                    scope="col"
+                                                    class="px-6 py-4 text-sm font-medium text-left text-gray-900"
+                                                >
                                                     Grade
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(student, index) in props.students" :key="`student-${index}`" class="border-b" :class="index % 2 == 0 ? 'bg-gray-100' : 'bg-white'">
-                                                <td class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap">
+                                            <tr
+                                                v-for="(student, index) in props.students"
+                                                :key="`student-${index}`"
+                                                class="border-b"
+                                                :class="index % 2 == 0 ? 'bg-gray-100' : 'bg-white'"
+                                            >
+                                                <td
+                                                    class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap"
+                                                >
                                                     {{ student.first_name }}
                                                 </td>
-                                                <td class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap">
+                                                <td
+                                                    class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap"
+                                                >
                                                     {{ student.last_name }}
                                                 </td>
-                                                <td class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap">
+                                                <td
+                                                    class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap"
+                                                >
                                                     {{ student.roll_no }}
                                                 </td>
-                                                <td class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap">
+                                                <td
+                                                    class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap"
+                                                >
                                                     {{ student.grade.name }}
                                                 </td>
                                             </tr>
