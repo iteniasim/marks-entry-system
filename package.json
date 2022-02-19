@@ -26,6 +26,7 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
+        "daisyui": "^2.0.9",
         "eslint": "^8.9.0",
         "eslint-plugin-vue": "^8.4.1"
     }
