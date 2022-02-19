@@ -1,6 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
-import { Head } from '@inertiajs/inertia-vue3'
+import { Head, Link } from '@inertiajs/inertia-vue3'
 
 const pageTitle = 'Students'
 
@@ -18,82 +18,44 @@ const props = defineProps({
         </template>
 
         <template #actions>
-            <button class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 active:bg-blue-700 disabled:opacity-50">
-                Add
-            </button>
+            <Link :href="route('students.create')" class="btn btn-primary btn-sm">
+                Add Student
+            </Link>
         </template>
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                    <div class="flex flex-col">
-                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                                <div class="overflow-hidden">
-                                    <table class="min-w-full">
-                                        <thead class="bg-white border-b">
-                                            <tr>
-                                                <th
-                                                    scope="col"
-                                                    class="px-6 py-4 text-sm font-medium text-left text-gray-900"
-                                                >
-                                                    First
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    class="px-6 py-4 text-sm font-medium text-left text-gray-900"
-                                                >
-                                                    Last
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    class="px-6 py-4 text-sm font-medium text-left text-gray-900"
-                                                >
-                                                    Roll
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    class="px-6 py-4 text-sm font-medium text-left text-gray-900"
-                                                >
-                                                    Grade
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr
-                                                v-for="(student, index) in props.students"
-                                                :key="`student-${index}`"
-                                                class="border-b"
-                                                :class="index % 2 == 0 ? 'bg-gray-100' : 'bg-white'"
-                                            >
-                                                <td
-                                                    class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap"
-                                                >
-                                                    {{ student.first_name }}
-                                                </td>
-                                                <td
-                                                    class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap"
-                                                >
-                                                    {{ student.last_name }}
-                                                </td>
-                                                <td
-                                                    class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap"
-                                                >
-                                                    {{ student.roll_no }}
-                                                </td>
-                                                <td
-                                                    class="px-6 py-4 text-sm font-light text-gray-900 whitespace-nowrap"
-                                                >
-                                                    {{ student.grade.name }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <table class="table min-w-full table-zebra">
+                    <thead>
+                        <tr>
+                            <th>First</th>
+                            <th>Last</th>
+                            <th>Roll</th>
+                            <th>Grade</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            class="hover"
+                            v-for="(student, index) in props.students"
+                            :key="`student-${index}`"
+                        >
+                            <td>{{ student.first_name }}</td>
+                            <td>{{ student.last_name }}</td>
+                            <td>{{ student.roll_no }}</td>
+                            <td>{{ student.grade.name }}</td>
+                            <td>
+                                <Link class="btn btn-link" :href="route('students.edit', student.id)">
+                                    Edit
+                                </Link>
+                                <Link class="btn btn-link" :href="route('students.destroy', student.id)">
+                                    Delete
+                                </Link>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </BreezeAuthenticatedLayout>
