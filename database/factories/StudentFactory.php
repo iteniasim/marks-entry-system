@@ -20,7 +20,7 @@ class StudentFactory extends Factory
         return [
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
-            'roll_no' => $this->faker->randomNumber(2),
+            'roll_no' => $this->faker->unique()->randomNumber(2),
             'grade_id' => Grade::pluck('id')->random(),
         ];
     }

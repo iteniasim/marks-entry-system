@@ -13,7 +13,7 @@ class UpdateStudentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,10 @@ class UpdateStudentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'first_name' => 'required|unique:students,first_name,' . $this->student->id,
+            'last_name' => 'required|unique:students,last_name,' . $this->student->id,
+            'roll_no' => 'required|unique:students,roll_no,' . $this->student->id,
+            'grade_id' => 'required|exists:grades,id',
         ];
     }
 }

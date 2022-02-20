@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use App\Models\Grade;
 use App\Models\Student;
 
 class StudentController extends Controller
@@ -27,7 +28,9 @@ class StudentController extends Controller
      */
     public function create()
     {
-        return inertia('Students/Create');
+        return inertia('Students/Create', [
+            'grades' => Grade::all(),
+        ]);
     }
 
     /**
@@ -38,6 +41,7 @@ class StudentController extends Controller
      */
     public function store(StoreStudentRequest $request)
     {
+        Student::create($request->validated());
         return redirect(route('students.index'));
     }
 
@@ -64,6 +68,7 @@ class StudentController extends Controller
     {
         return inertia('Students/Edit', [
             'student' => $student,
+            'grades' => Grade::all(),
         ]);
     }
 
@@ -76,6 +81,7 @@ class StudentController extends Controller
      */
     public function update(UpdateStudentRequest $request, Student $student)
     {
+        $student->update($request->validated());
         return redirect(route('students.index'));
     }
 

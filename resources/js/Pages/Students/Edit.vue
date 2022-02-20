@@ -1,9 +1,20 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
-import { Head } from '@inertiajs/inertia-vue3'
-import Table from '@/Components/Table.vue'
+import { Head, useForm } from '@inertiajs/inertia-vue3'
 
 const pageTitle = 'Edit Student'
+
+const props = defineProps({
+    student: Object,
+    grades: Object,
+})
+
+const studentForm = useForm({
+    first_name: props.student.first_name,
+    last_name: props.student.last_name,
+    roll_no: props.student.roll_no,
+    grade_id: props.student.grade_id,
+})
 </script>
 
 <template>
@@ -17,69 +28,98 @@ const pageTitle = 'Edit Student'
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                    <Table>
-                        <template #header>
-                            <tr>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                    <div class="px-6 py-5">
+                        <form
+                            @submit.prevent="studentForm.put(route('students.update', student.id))"
+                            class="flex items-end justify-center gap-4"
+                        >
+                            <div class="w-full max-w-xs form-control">
+                                <label class="label">
+                                    <span class="label-text">First name</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="first_name"
+                                    v-model="studentForm.first_name"
+                                    placeholder="First name"
+                                    class="w-full max-w-xs input input-bordered"
+                                />
+                                <div
+                                    v-if="studentForm.errors.first_name"
                                 >
-                                    Name
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                                >
-                                    Title
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                                >
-                                    Status
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                                >
-                                    Role
-                                </th>
-                                <th scope="col" class="relative px-6 py-3">
-                                    <span class="sr-only">Edit</span>
-                                </th>
-                            </tr>
-                        </template>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 w-10 h-10">
-                                        <img
-                                            class="w-10 h-10 rounded-full"
-                                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60"
-                                            alt
-                                        />
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">Jane Cooper</div>
-                                        <div class="text-sm text-gray-500">jane.cooper@example.com</div>
-                                    </div>
+                                    {{ form.errors.first_name }}
                                 </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">Regional Paradigm Technician</div>
-                                <div class="text-sm text-gray-500">Optimization</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span
-                                    class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full"
-                                >Active</span>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">Admin</td>
-                            <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                            </td>
-                        </tr>
-                    </Table>
+                            </div>
+                            <div class="w-full max-w-xs form-control">
+                                <label class="label">
+                                    <span class="label-text">Last name</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="last_name"
+                                    v-model="studentForm.last_name"
+                                    placeholder="Last name"
+                                    class="w-full max-w-xs input input-bordered"
+                                />
+                                <div
+                                    v-if="studentForm.errors.last_name"
+                                >
+                                    {{ studentForm.errors.last_name }}
+                                </div>
+                            </div>
+                            <div class="w-full max-w-xs form-control">
+                                <label class="label">
+                                    <span class="label-text">Roll No.</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="roll_no"
+                                    v-model="studentForm.roll_no"
+                                    placeholder="Roll No."
+                                    class="w-full max-w-xs input input-bordered"
+                                />
+                                <div
+                                    v-if="studentForm.errors.roll_no"
+                                >
+                                    {{ studentForm.errors.roll_no }}
+                                </div>
+                            </div>
+                            <div class="w-full max-w-xs form-control">
+                                <label class="label">
+                                    <span class="label-text">Grade</span>
+                                </label>
+                                <select
+                                    name="grade_id"
+                                    v-model="studentForm.grade_id"
+                                    class="w-full max-w-xs select select-bordered"
+                                >
+                                    <option>Select Grade</option>
+                                    <option
+                                        v-for="(grade, index) in grades"
+                                        :key="`grade${index}`"
+                                        :value="grade.id"
+                                    >
+                                        {{ grade.name }}
+                                    </option>
+                                </select>
+                                <div
+                                    v-if="studentForm.errors.grade_id"
+                                >
+                                    {{ studentForm.errors.grade_id }}
+                                </div>
+                            </div>
+
+                            <div class="mt-2">
+                                <button
+                                    class="btn btn-primary"
+                                    :class="{ 'btn-disabled': studentForm.processing }"
+                                    :disabled="studentForm.processing"
+                                >
+                                    Update
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
