@@ -42,7 +42,7 @@ class StudentController extends Controller
     public function store(StoreStudentRequest $request)
     {
         Student::create($request->validated());
-        return redirect(route('students.index'));
+        return to_route('students.index');
     }
 
     /**
@@ -82,7 +82,7 @@ class StudentController extends Controller
     public function update(UpdateStudentRequest $request, Student $student)
     {
         $student->update($request->validated());
-        return redirect(route('students.index'));
+        return to_route('students.index');
     }
 
     /**
@@ -93,6 +93,7 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        return inertia('students.index');
+        $student->delete();
+        return to_route('students.index');
     }
 }

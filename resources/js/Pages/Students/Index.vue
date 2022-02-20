@@ -4,7 +4,7 @@ import { Head, Link } from '@inertiajs/inertia-vue3'
 
 const pageTitle = 'Students'
 
-const props = defineProps({
+defineProps({
     students: Object,
 })
 </script>
@@ -38,7 +38,7 @@ const props = defineProps({
                     <tbody>
                         <tr
                             class="hover"
-                            v-for="(student, index) in props.students"
+                            v-for="(student, index) in students"
                             :key="`student-${index}`"
                         >
                             <td>{{ student.first_name }}</td>
@@ -49,7 +49,7 @@ const props = defineProps({
                                 <Link class="btn btn-link" :href="route('students.edit', student.id)">
                                     Edit
                                 </Link>
-                                <Link class="btn btn-link" :href="route('students.destroy', student.id)">
+                                <Link class="btn btn-link" method="delete" as="button" type="button" :href="route('students.destroy', student.id)">
                                     Delete
                                 </Link>
                             </td>
