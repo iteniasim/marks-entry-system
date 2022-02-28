@@ -4,7 +4,7 @@ import { Head, Link } from '@inertiajs/inertia-vue3'
 
 const pageTitle = 'Students'
 
-defineProps({
+const props = defineProps({
     students: Object,
 })
 </script>
@@ -38,7 +38,7 @@ defineProps({
                     <tbody>
                         <tr
                             class="hover"
-                            v-for="(student, index) in students"
+                            v-for="(student, index) in props.students"
                             :key="`student-${index}`"
                         >
                             <td>{{ student.first_name }}</td>

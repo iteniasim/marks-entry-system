@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\GradeController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\SubjectController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,6 +34,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     })->name('dashboard');
     Route::resource('students', StudentController::class);
     Route::resource('exams', ExamController::class);
+    Route::resource('grades', GradeController::class);
+    Route::resource('subjects', SubjectController::class);
 });
 
 require __DIR__ . '/auth.php';

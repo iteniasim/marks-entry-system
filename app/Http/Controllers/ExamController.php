@@ -15,7 +15,9 @@ class ExamController extends Controller
      */
     public function index()
     {
-        //
+        return inertia('Exams/Index', [
+            'exams' => Exam::all(),
+        ]);
     }
 
     /**
@@ -25,7 +27,7 @@ class ExamController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Exams/Create');
     }
 
     /**
@@ -36,7 +38,8 @@ class ExamController extends Controller
      */
     public function store(StoreExamRequest $request)
     {
-        //
+        Exam::create($request->validated());
+        return to_route('exams.index');
     }
 
     /**
@@ -47,7 +50,9 @@ class ExamController extends Controller
      */
     public function show(Exam $exam)
     {
-        //
+        return inertia('Exams/Show', [
+            'exam' => $exam,
+        ]);
     }
 
     /**
@@ -58,7 +63,9 @@ class ExamController extends Controller
      */
     public function edit(Exam $exam)
     {
-        //
+        return inertia('Exams/Edit', [
+            'exam' => $exam,
+        ]);
     }
 
     /**
@@ -70,7 +77,8 @@ class ExamController extends Controller
      */
     public function update(UpdateExamRequest $request, Exam $exam)
     {
-        //
+        $exam->update($request->validated());
+        return to_route('exams.index');
     }
 
     /**
@@ -81,6 +89,7 @@ class ExamController extends Controller
      */
     public function destroy(Exam $exam)
     {
-        //
+        $exam->delete();
+        return to_route('exams.index');
     }
 }
