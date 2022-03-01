@@ -33,6 +33,12 @@ const showingNavigationDropdown = ref(false)
                                 <BreezeNavLink :href="route('students.index')" :active="route().current('students.index')">
                                     Students
                                 </BreezeNavLink>
+                                <BreezeNavLink :href="route('grades.index')" :active="route().current('grades.index')">
+                                    Grades
+                                </BreezeNavLink>
+                                <BreezeNavLink :href="route('subjects.index')" :active="route().current('subjects.index')">
+                                    Subjects
+                                </BreezeNavLink>
                                 <BreezeNavLink :href="route('exams.index')" :active="route().current('exams.index')">
                                     Exams
                                 </BreezeNavLink>
