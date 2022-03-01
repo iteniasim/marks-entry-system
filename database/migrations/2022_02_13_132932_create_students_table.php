@@ -21,6 +21,8 @@ return new class extends Migration
             $table->integer('roll_no');
             $table->foreignIdFor(Grade::class)->constrained();
             $table->timestamps();
+
+            $table->unique(['roll_no', 'grade_id']);
         });
     }
 

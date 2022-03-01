@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('name');
             $table->foreignIdFor(Grade::class)->constrained();
             $table->timestamps();
+
+            $table->unique(['name', 'grade_id']);
         });
     }
 
