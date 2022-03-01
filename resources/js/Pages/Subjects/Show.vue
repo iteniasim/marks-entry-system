@@ -3,7 +3,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head } from '@inertiajs/inertia-vue3'
 import Table from '@/Components/Table.vue'
 
-const pageTitle = 'Subject Details'
+const pageTitle = 'Exam Details'
 </script>
 
 <template>

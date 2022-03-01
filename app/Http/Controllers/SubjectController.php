@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSubjectRequest;
 use App\Http\Requests\UpdateSubjectRequest;
+use App\Models\Grade;
 use App\Models\Subject;
 
 class SubjectController extends Controller
@@ -15,7 +16,9 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        //
+        return inertia('Subjects/Index', [
+            'subjects' => Subject::all(),
+        ]);
     }
 
     /**
@@ -25,7 +28,8 @@ class SubjectController extends Controller
      */
     public function create()
     {
-        //
+        $grades = Grade::all();
+        return inertia('Subjects/Create', compact('grades'));
     }
 
     /**
@@ -36,7 +40,8 @@ class SubjectController extends Controller
      */
     public function store(StoreSubjectRequest $request)
     {
-        //
+        Subject::create($request->validated());
+        return to_route('subjects.index');
     }
 
     /**
@@ -47,7 +52,9 @@ class SubjectController extends Controller
      */
     public function show(Subject $subject)
     {
-        //
+        return inertia('Subjects/Show', [
+            'subject' => $subject,
+        ]);
     }
 
     /**
@@ -58,7 +65,11 @@ class SubjectController extends Controller
      */
     public function edit(Subject $subject)
     {
-        //
+        $grades = Grade::all();
+        return inertia('Subjects/Edit', [
+            'subject' => $subject,
+            'grades' => $grades,
+        ]);
     }
 
     /**
@@ -70,7 +81,8 @@ class SubjectController extends Controller
      */
     public function update(UpdateSubjectRequest $request, Subject $subject)
     {
-        //
+        $subject->update($request->validated());
+        return to_route('subjects.index');
     }
 
     /**
@@ -81,6 +93,7 @@ class SubjectController extends Controller
      */
     public function destroy(Subject $subject)
     {
-        //
+        $subject->delete();
+        return to_route('subjects.index');
     }
 }

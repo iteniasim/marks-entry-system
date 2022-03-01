@@ -15,7 +15,9 @@ class GradeController extends Controller
      */
     public function index()
     {
-        //
+        return inertia('Grades/Index', [
+            'grades' => Grade::all(),
+        ]);
     }
 
     /**
@@ -25,7 +27,7 @@ class GradeController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Grades/Create');
     }
 
     /**
@@ -36,7 +38,8 @@ class GradeController extends Controller
      */
     public function store(StoreGradeRequest $request)
     {
-        //
+        Grade::create($request->validated());
+        return to_route('grades.index');
     }
 
     /**
@@ -47,7 +50,9 @@ class GradeController extends Controller
      */
     public function show(Grade $grade)
     {
-        //
+        return inertia('Grades/Show', [
+            'grade' => $grade,
+        ]);
     }
 
     /**
@@ -58,7 +63,9 @@ class GradeController extends Controller
      */
     public function edit(Grade $grade)
     {
-        //
+        return inertia('Grades/Edit', [
+            'grade' => $grade,
+        ]);
     }
 
     /**
@@ -70,7 +77,8 @@ class GradeController extends Controller
      */
     public function update(UpdateGradeRequest $request, Grade $grade)
     {
-        //
+        $grade->update($request->validated());
+        return to_route('grades.index');
     }
 
     /**
@@ -81,6 +89,7 @@ class GradeController extends Controller
      */
     public function destroy(Grade $grade)
     {
-        //
+        $grade->delete();
+        return to_route('grades.index');
     }
 }
