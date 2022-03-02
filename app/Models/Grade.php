@@ -15,4 +15,14 @@ class Grade extends Model
     {
         return $this->hasMany(Student::class);
     }
+
+    public function exams()
+    {
+        return $this->belongsToMany(Exam::class);
+    }
+
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class);
+    }
 }

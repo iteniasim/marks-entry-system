@@ -10,4 +10,9 @@ class Subject extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class);
+    }
 }
