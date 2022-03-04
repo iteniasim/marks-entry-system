@@ -13,6 +13,6 @@ class Exam extends Model
 
     public function grades()
     {
-        return $this->belongsToMany(Grade::class);
+        return $this->belongsTo(Grade::class);
     }
 }
