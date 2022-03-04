@@ -16,5 +16,12 @@ module.exports = {
         },
     },
 
-    plugins: [require('@tailwindcss/forms'), require('daisyui')],
+    variants: {
+        extend: {
+            opacity: ['disabled'],
+            cursor: ['disabled'],
+        },
+    },
+
+    plugins: [require('@tailwindcss/forms')],
 }

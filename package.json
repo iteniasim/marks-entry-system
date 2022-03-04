@@ -26,7 +26,10 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
-        "daisyui": "^2.0.9",
+        "@popperjs/core": "^2.11.2",
+        "@variantjs/core": "^0.0.87",
+        "@variantjs/vue": "^0.0.21",
+        "body-scroll-lock": "^4.0.0-beta.0",
         "eslint": "^8.9.0",
         "eslint-plugin-vue": "^8.4.1"
     }
