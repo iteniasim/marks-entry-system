@@ -24,8 +24,7 @@ class UpdateStudentRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required|unique:students,first_name,' . $this->student->id,
-            'last_name' => 'required|unique:students,last_name,' . $this->student->id,
+            'name' => 'required|unique:students,name,' . $this->student->id,
             'roll_no' => 'required|unique:students,roll_no,' . $this->student->id,
             'grade_id' => 'required|exists:grades,id',
         ];

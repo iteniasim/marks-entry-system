@@ -18,8 +18,7 @@ class StudentFactory extends Factory
     public function definition()
     {
         return [
-            'first_name' => $this->faker->firstName(),
-            'last_name' => $this->faker->lastName(),
+            'name' => $this->faker->name(),
             'roll_no' => $this->faker->unique()->randomNumber(2),
             'grade_id' => Grade::pluck('id')->random(),
         ];

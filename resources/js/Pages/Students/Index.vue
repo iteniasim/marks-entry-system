@@ -28,8 +28,7 @@ const props = defineProps({
                 <table class="table min-w-full table-zebra">
                     <thead>
                         <tr>
-                            <th>First</th>
-                            <th>Last</th>
+                            <th>Name</th>
                             <th>Roll</th>
                             <th>Grade</th>
                             <th>Actions</th>
@@ -41,8 +40,7 @@ const props = defineProps({
                             v-for="(student, index) in props.students"
                             :key="`student-${index}`"
                         >
-                            <td>{{ student.first_name }}</td>
-                            <td>{{ student.last_name }}</td>
+                            <td>{{ student.name }}</td>
                             <td>{{ student.roll_no }}</td>
                             <td>{{ student.grade.name }}</td>
                             <td>

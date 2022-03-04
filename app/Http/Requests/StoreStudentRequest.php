@@ -24,8 +24,7 @@ class StoreStudentRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required|unique:students,first_name',
-            'last_name' => 'required|unique:students,last_name',
+            'name' => 'required|unique:students,name',
             'roll_no' => 'required|unique:students,roll_no',
             'grade_id' => 'required|exists:grades,id',
         ];

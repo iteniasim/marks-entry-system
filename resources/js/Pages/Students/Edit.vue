@@ -10,8 +10,7 @@ const props = defineProps({
 })
 
 const studentForm = useForm({
-    first_name: props.student.first_name,
-    last_name: props.student.last_name,
+    name: props.student.name,
     roll_no: props.student.roll_no,
     grade_id: props.student.grade_id,
 })
@@ -35,19 +34,19 @@ const studentForm = useForm({
                         >
                             <div class="w-full max-w-xs form-control">
                                 <label class="label">
-                                    <span class="label-text">First name</span>
+                                    <span class="label-text">Name</span>
                                 </label>
                                 <input
                                     type="text"
-                                    name="first_name"
-                                    v-model="studentForm.first_name"
-                                    placeholder="First name"
+                                    name="name"
+                                    v-model="studentForm.name"
+                                    placeholder="Name"
                                     class="w-full max-w-xs input input-bordered"
                                 />
                                 <div
-                                    v-if="studentForm.errors.first_name"
+                                    v-if="studentForm.errors.name"
                                 >
-                                    {{ form.errors.first_name }}
+                                    {{ form.errors.name }}
                                 </div>
                             </div>
                             <div class="w-full max-w-xs form-control">
