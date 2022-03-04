@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMarkRequest;
 use App\Http\Requests\UpdateMarkRequest;
+use App\Models\Exam;
+use App\Models\Grade;
 use App\Models\Mark;
+use App\Models\Student;
+use App\Models\Subject;
 
 class MarkController extends Controller
 {
@@ -27,7 +31,11 @@ class MarkController extends Controller
      */
     public function create()
     {
-        return inertia('Marks/Create');
+        $students = Student::all();
+        $subjects = Subject::all();
+        $exams = Exam::all();
+        $grades = Grade::all();
+        return inertia('Marks/Create', compact('students', 'subjects', 'exams', 'grades'));
     }
 
     /**

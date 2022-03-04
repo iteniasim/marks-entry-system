@@ -1,19 +1,24 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, useForm } from '@inertiajs/inertia-vue3'
+import { TRichSelect, TInput, TButton } from '@variantjs/vue'
 
-const pageTitle = 'Edit Student'
+const pageTitle = 'Marks Edit'
 
 const props = defineProps({
-    student: Object,
+    students: Object,
+    subjects: Object,
+    exams: Object,
     grades: Object,
+    mark: Object,
 })
 
 const studentForm = useForm({
-    first_name: props.student.first_name,
-    last_name: props.student.last_name,
-    roll_no: props.student.roll_no,
-    grade_id: props.student.grade_id,
+    student_id: props.mark.student_id,
+    subject_id: props.mark.subject_id,
+    exam_id: props.mark.exam_id,
+    grade_id: props.mark.grade_id,
+    obtained_marks: props.mark.obtained_marks,
 })
 </script>
 
@@ -27,96 +32,80 @@ const studentForm = useForm({
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div class="bg-white shadow-sm overflow-none sm:rounded-lg">
                     <div class="px-6 py-5">
                         <form
-                            @submit.prevent="studentForm.put(route('students.update', student.id))"
-                            class="flex items-end justify-center gap-4"
+                            @submit.prevent="studentForm.post(route('marks.update'))"
                         >
-                            <div class="w-full max-w-xs form-control">
-                                <label class="label">
-                                    <span class="label-text">First name</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    name="first_name"
-                                    v-model="studentForm.first_name"
-                                    placeholder="First name"
-                                    class="w-full max-w-xs input input-bordered"
-                                />
-                                <div
-                                    v-if="studentForm.errors.first_name"
-                                >
-                                    {{ form.errors.first_name }}
+                            <div class="grid grid-cols-2 gap-5">
+                                <div>
+                                    <label class="label">
+                                        <span class="label-text">Student</span>
+                                    </label>
+                                    <t-rich-select
+                                        :options="props.students"
+                                        v-model="studentForm.student_id"
+                                        name="student_id"
+                                        placeholder="Select Student"
+                                        value-attribute="id"
+                                        text-attribute="name"
+                                    />
                                 </div>
-                            </div>
-                            <div class="w-full max-w-xs form-control">
-                                <label class="label">
-                                    <span class="label-text">Last name</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    name="last_name"
-                                    v-model="studentForm.last_name"
-                                    placeholder="Last name"
-                                    class="w-full max-w-xs input input-bordered"
-                                />
-                                <div
-                                    v-if="studentForm.errors.last_name"
-                                >
-                                    {{ studentForm.errors.last_name }}
+                                <div>
+                                    <label class="label">
+                                        <span class="label-text">Subject</span>
+                                    </label>
+                                    <t-rich-select
+                                        :options="props.subjects"
+                                        v-model="studentForm.subject_id"
+                                        name="subject_id"
+                                        placeholder="Select Subject"
+                                        value-attribute="id"
+                                        text-attribute="name"
+                                    />
                                 </div>
-                            </div>
-                            <div class="w-full max-w-xs form-control">
-                                <label class="label">
-                                    <span class="label-text">Roll No.</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    name="roll_no"
-                                    v-model="studentForm.roll_no"
-                                    placeholder="Roll No."
-                                    class="w-full max-w-xs input input-bordered"
-                                />
-                                <div
-                                    v-if="studentForm.errors.roll_no"
-                                >
-                                    {{ studentForm.errors.roll_no }}
+                                <div>
+                                    <label class="label">
+                                        <span class="label-text">Grades</span>
+                                    </label>
+                                    <t-rich-select
+                                        :options="props.grades"
+                                        v-model="studentForm.grade_id"
+                                        name="grade_id"
+                                        placeholder="Select Grade"
+                                        value-attribute="id"
+                                        text-attribute="name"
+                                    />
                                 </div>
-                            </div>
-                            <div class="w-full max-w-xs form-control">
-                                <label class="label">
-                                    <span class="label-text">Grade</span>
-                                </label>
-                                <select
-                                    name="grade_id"
-                                    v-model="studentForm.grade_id"
-                                    class="w-full max-w-xs select select-bordered"
-                                >
-                                    <option>Select Grade</option>
-                                    <option
-                                        v-for="(grade, index) in grades"
-                                        :key="`grade${index}`"
-                                        :value="grade.id"
-                                    >
-                                        {{ grade.name }}
-                                    </option>
-                                </select>
-                                <div
-                                    v-if="studentForm.errors.grade_id"
-                                >
-                                    {{ studentForm.errors.grade_id }}
+                                <div>
+                                    <label class="label">
+                                        <span class="label-text">Exam</span>
+                                    </label>
+                                    <t-rich-select
+                                        name="exam_id"
+                                        v-model="studentForm.exam_id"
+                                        :options="props.exams"
+                                        placeholder="Select Exam"
+                                        value-attribute="id"
+                                        text-attribute="name"
+                                    />
+                                </div>
+                                <div>
+                                    <label class="label">
+                                        <span class="label-text">Obtained Marks</span>
+                                    </label>
+                                    <t-input name="obtained_marks" v-model="studentForm.obtained_marks" />
                                 </div>
                             </div>
 
                             <div class="mt-2">
-                                <button
-                                    class="btn btn-primary"
-                                    :class="{ 'btn-disabled': studentForm.processing }"
+                                <t-button
+                                    class="bg-blue-500"
+                                    :class="{ 'opacity-75': studentForm.processing }"
                                     :disabled="studentForm.processing"
                                 >
-                                    Update
-                                </button>
+                                    Save
+                                </t-button>
                             </div>
                         </form>
                     </div>
