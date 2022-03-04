@@ -17,6 +17,7 @@ return new class extends Migration
     {
         Schema::create('exam_grade', function (Blueprint $table) {
             $table->id();
+            $table->year('year');
             $table->foreignIdFor(Exam::class)->constrained();
             $table->foreignIdFor(Grade::class)->constrained();
             $table->timestamps();
