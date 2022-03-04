@@ -15,4 +15,9 @@ class Exam extends Model
     {
         return $this->belongsTo(Grade::class);
     }
+
+    public function marks()
+    {
+        return $this->hasMany(Mark::class);
+    }
 }
