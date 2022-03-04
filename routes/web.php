@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\MarkController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -20,12 +20,7 @@ use Inertia\Inertia;
  */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect(route('login'));
 });
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
@@ -36,6 +31,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::resource('exams', ExamController::class);
     Route::resource('grades', GradeController::class);
     Route::resource('subjects', SubjectController::class);
+    Route::resource('marks', MarkController::class);
 });
 
 require __DIR__ . '/auth.php';
