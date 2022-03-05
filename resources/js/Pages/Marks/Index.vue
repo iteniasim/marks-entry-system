@@ -1,6 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
+import { TButton } from '@variantjs/vue'
 
 const pageTitle = 'Marks'
 
@@ -18,12 +19,16 @@ const props = defineProps({
         </template>
 
         <template #actions>
-            <Link :href="route('marks.create')" class="btn btn-primary btn-sm">Add Marks</Link>
+            <Link :href="route('marks.create')" class="btn btn-primary btn-sm">
+                <t-button>
+                    Add Marks
+                </t-button>
+            </Link>
         </template>
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <table class="min-w-full border border-gray-200 divide-y divide-gray-100 shadow-sm">
+                <table v-if="marks.length" class="min-w-full border border-gray-200 divide-y divide-gray-100 shadow-sm">
                     <thead class>
                         <tr class>
                             <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Student</th>
@@ -33,6 +38,7 @@ const props = defineProps({
                             <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Full Marks</th>
                             <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Pass Marks</th>
                             <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Obtained Marks</th>
+                            <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
@@ -52,12 +58,27 @@ const props = defineProps({
                             <td class="px-3 py-2 whitespace-no-wrap">
                                 {{ mark.grade.name }}
                             </td>
+                            <td class="px-3 py-2 whitespace-no-wrap">
+                                {{ mark.full_marks }}
+                            </td>
+                            <td class="px-3 py-2 whitespace-no-wrap">
+                                {{ mark.pass_marks }}
+                            </td>
+                            <td class="px-3 py-2 whitespace-no-wrap">
+                                {{ mark.obtained_marks }}
+                            </td>
                             <td>
-                                <Link class="btn btn-link" :href="route('marks.edit', mark.id)">Edit</Link>
+                                <Link class="btn btn-link" :href="route('marks.edit', mark.id)">
+                                    <t-button>Edit</t-button>
+                                </Link>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+
+                <div v-else>
+                    No marks saved
+                </div>
             </div>
         </div>
     </BreezeAuthenticatedLayout>

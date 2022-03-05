@@ -20,7 +20,7 @@ class MarkController extends Controller
     public function index()
     {
         return inertia('Marks/Index', [
-            'marks' => Mark::all(),
+            'marks' => Mark::with(['student', 'subject', 'exam', 'grade'])->get(),
         ]);
     }
 
@@ -46,7 +46,12 @@ class MarkController extends Controller
      */
     public function store(StoreMarkRequest $request)
     {
-        Mark::create($request->validated());
+        $subject = Subject::whereId($request->subject_id)->first();
+        Mark::create([
+            ...$request->validated(),
+            'full_marks' => $subject->full_marks,
+            'pass_marks' => $subject->pass_marks,
+        ]);
         return to_route('marks.index');
     }
 
@@ -71,9 +76,12 @@ class MarkController extends Controller
      */
     public function edit(Mark $mark)
     {
-        return inertia('Marks/Edit', [
-            'mark' => $mark,
-        ]);
+        $students = Student::all();
+        $subjects = Subject::all();
+        $exams = Exam::all();
+        $grades = Grade::all();
+
+        return inertia('Marks/Edit', compact('mark', 'students', 'subjects', 'exams', 'grades'));
     }
 
     /**
@@ -85,7 +93,12 @@ class MarkController extends Controller
      */
     public function update(UpdateMarkRequest $request, Mark $mark)
     {
-        $mark->update($request->validated());
+        $subject = Subject::whereId($request->subject_id)->first();
+        $mark->update([
+            ...$request->validated(),
+            'full_marks' => $subject->full_marks,
+            'pass_marks' => $subject->pass_marks,
+        ]);
         return to_route('marks.index');
     }
 

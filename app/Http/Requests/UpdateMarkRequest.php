@@ -24,7 +24,11 @@ class UpdateMarkRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'student_id' => 'required|exists:students,id',
+            'subject_id' => 'required|exists:subjects,id',
+            'exam_id' => 'required|exists:exams,id',
+            'grade_id' => 'required|exists:grades,id',
+            'obtained_marks' => 'required|min:0|max:100',
         ];
     }
 }
