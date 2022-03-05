@@ -26,7 +26,7 @@ const studentForm = useForm({
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div class="bg-white shadow-sm sm:rounded-lg">
                     <div class="px-6 py-5">
                         <form @submit.prevent="studentForm.post(route('students.store'))">
                             <div class="grid grid-cols-2 gap-5">
