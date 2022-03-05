@@ -1,6 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, useForm } from '@inertiajs/inertia-vue3'
+import { TInput, TButton } from '@variantjs/vue'
 
 const pageTitle = 'Edit Grade'
 
@@ -25,20 +26,15 @@ const gradeForm = useForm({
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="px-6 py-5">
-                        <form
-                            @submit.prevent="gradeForm.put(route('grades.update', props.grade.id))"
-                            class="flex items-end justify-center gap-4"
-                        >
-                            <div class="w-full max-w-xs form-control">
+                        <form @submit.prevent="gradeForm.put(route('grades.update', props.grade.id))">
+                            <div>
                                 <label class="label">
                                     <span class="label-text">Name</span>
                                 </label>
-                                <input
-                                    type="text"
+                                <t-input
                                     name="name"
                                     v-model="gradeForm.name"
                                     placeholder="Name"
-                                    class="w-full max-w-xs input input-bordered"
                                 />
                                 <div
                                     v-if="gradeForm.errors.name"
@@ -47,14 +43,10 @@ const gradeForm = useForm({
                                 </div>
                             </div>
 
-                            <div class="mt-2">
-                                <button
-                                    class="btn btn-primary"
-                                    :class="{ 'btn-disabled': gradeForm.processing }"
-                                    :disabled="gradeForm.processing"
-                                >
-                                    Update
-                                </button>
+                            <div class="flex items-center justify-end mt-8">
+                                <t-button :disabled="gradeForm.processing">
+                                    Save
+                                </t-button>
                             </div>
                         </form>
                     </div>
