@@ -19,9 +19,11 @@ const props = defineProps({
         </template>
 
         <template #actions>
-            <t-button :href="route('students.create')">
-                Add Student
-            </t-button>
+            <Link :href="route('students.create')">
+                <t-button>
+                    Add Student
+                </t-button>
+            </Link>
         </template>
 
         <div class="py-12">
