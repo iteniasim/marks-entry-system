@@ -1,6 +1,6 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
-import { Head } from '@inertiajs/inertia-vue3'
+import { Head, Link } from '@inertiajs/inertia-vue3'
 import { TButton } from '@variantjs/vue'
 
 const pageTitle = 'Students'
@@ -50,12 +50,16 @@ const props = defineProps({
                                 {{ student.grade.name }}
                             </td>
                             <td class="flex items-center gap-4">
-                                <t-button :href="route('students.edit', student.id)">
-                                    Edit
-                                </t-button>
-                                <t-button method="delete" as="button" type="button" :href="route('students.destroy', student.id)">
-                                    Delete
-                                </t-button>
+                                <Link :href="route('students.edit', student.id)">
+                                    <t-button>
+                                        Edit
+                                    </t-button>
+                                </Link>
+                                <Link method="delete" as="button" type="button" :href="route('students.destroy', student.id)">
+                                    <t-button>
+                                        Delete
+                                    </t-button>
+                                </Link>
                             </td>
                         </tr>
                     </tbody>
