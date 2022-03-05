@@ -1,6 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
+import { TButton } from '@variantjs/vue'
 
 const pageTitle = 'Grades'
 
@@ -18,33 +19,36 @@ const props = defineProps({
         </template>
 
         <template #actions>
-            <Link :href="route('grades.create')" class="btn btn-primary btn-sm">
-                Add grade
+            <Link :href="route('grades.create')">
+                <t-button>
+                    Add grade
+                </t-button>
             </Link>
         </template>
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <table class="table min-w-full table-zebra">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Actions</th>
+                <table class="min-w-full border border-gray-200 divide-y divide-gray-100 shadow-sm">
+                    <thead class>
+                        <tr class>
+                            <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Name</th>
+                            <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="bg-white divide-y divide-gray-100">
                         <tr
-                            class="hover"
                             v-for="(grade, index) in props.grades"
                             :key="`grade-${index}`"
                         >
-                            <td>{{ grade.name }}</td>
-                            <td>
-                                <Link class="btn btn-link" :href="route('grades.edit', grade.id)">
-                                    Edit
+                            <td class="px-3 py-2 whitespace-no-wrap">
+                                {{ grade.name }}
+                            </td>
+                            <td class="flex items-center gap-4">
+                                <Link :href="route('grades.edit', grade.id)">
+                                    <t-button>Edit</t-button>
                                 </Link>
-                                <Link class="btn btn-link" method="delete" as="button" type="button" :href="route('grades.destroy', grade.id)">
-                                    Delete
+                                <Link method="delete" as="button" type="button" :href="route('grades.destroy', grade.id)">
+                                    <t-button>Delete</t-button>
                                 </Link>
                             </td>
                         </tr>
