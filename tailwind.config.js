@@ -9,7 +9,7 @@ module.exports = {
     ],
 
     safelist: [
-        'mt-2.5',
+        { pattern: /.*/ },
     ],
 
     theme: {
