@@ -1,6 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, useForm } from '@inertiajs/inertia-vue3'
+import { TInput, TButton, TRichSelect } from '@variantjs/vue'
 
 const props = defineProps({
     grades: Object,
@@ -24,22 +25,17 @@ const subjectForm = useForm({
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div class="bg-white shadow-sm sm:rounded-lg">
                     <div class="px-6 py-5">
-                        <form
-                            @submit.prevent="subjectForm.post(route('subjects.store'))"
-                            class="flex items-end justify-center gap-4"
-                        >
-                            <div class="w-full max-w-xs form-control">
+                        <form @submit.prevent="subjectForm.post(route('subjects.store'))">
+                            <div>
                                 <label class="label">
                                     <span class="label-text">Subject</span>
                                 </label>
-                                <input
-                                    type="text"
+                                <TInput
                                     name="name"
                                     v-model="subjectForm.name"
                                     placeholder="Name"
-                                    class="w-full max-w-xs input input-bordered"
                                 />
                                 <div
                                     v-if="subjectForm.errors.name"
@@ -48,24 +44,18 @@ const subjectForm = useForm({
                                 </div>
                             </div>
 
-                            <div class="w-full max-w-xs form-control">
+                            <div>
                                 <label class="label">
                                     <span class="label-text">Grade</span>
                                 </label>
-                                <select
-                                    name="grade_id"
+                                <t-rich-select
+                                    :options="props.grades"
                                     v-model="subjectForm.grade_id"
-                                    class="w-full max-w-xs select select-bordered"
-                                >
-                                    <option disabled selected>Grade</option>
-                                    <option
-                                        v-for="(grade, index) in props.grades"
-                                        :key="`grade${index}`"
-                                        :value="grade.id"
-                                    >
-                                        {{ grade.name }}
-                                    </option>
-                                </select>
+                                    name="grade_id"
+                                    placeholder="Select Grade"
+                                    value-attribute="id"
+                                    text-attribute="name"
+                                />
                                 <div
                                     v-if="subjectForm.errors.grade_id"
                                 >
@@ -73,14 +63,10 @@ const subjectForm = useForm({
                                 </div>
                             </div>
 
-                            <div class="mt-2">
-                                <button
-                                    class="btn btn-primary"
-                                    :class="{ 'btn-disabled': subjectForm.processing }"
-                                    :disabled="subjectForm.processing"
-                                >
+                            <div class="flex items-center justify-end">
+                                <t-button class="mt-8" :disabled="subjectForm.processing">
                                     Save
-                                </button>
+                                </t-button>
                             </div>
                         </form>
                     </div>
