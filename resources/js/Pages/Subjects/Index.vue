@@ -1,6 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
+import { TButton } from '@variantjs/vue'
 
 const pageTitle = 'Subjects'
 
@@ -18,33 +19,36 @@ const props = defineProps({
         </template>
 
         <template #actions>
-            <Link :href="route('subjects.create')" class="btn btn-primary btn-sm">
-                Add subjects
+            <Link :href="route('subjects.create')">
+                <t-button>
+                    Add subjects
+                </t-button>
             </Link>
         </template>
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <table class="table min-w-full table-zebra">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Actions</th>
+                <table class="min-w-full border border-gray-200 divide-y divide-gray-100 shadow-sm">
+                    <thead class>
+                        <tr class>
+                            <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Name</th>
+                            <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="bg-white divide-y divide-gray-100">
                         <tr
-                            class="hover"
                             v-for="(exam, index) in props.subjects"
                             :key="`exam-${index}`"
                         >
-                            <td>{{ exam.name }}</td>
-                            <td>
+                            <td class="px-3 py-2 whitespace-no-wrap">
+                                {{ exam.name }}
+                            </td>
+                            <td class="flex items-center gap-4">
                                 <Link class="btn btn-link" :href="route('subjects.edit', exam.id)">
-                                    Edit
+                                    <t-button>Edit</t-button>
                                 </Link>
                                 <Link class="btn btn-link" method="delete" as="button" type="button" :href="route('subjects.destroy', exam.id)">
-                                    Delete
+                                    <t-button>Delete</t-button>
                                 </Link>
                             </td>
                         </tr>
