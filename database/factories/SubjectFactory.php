@@ -20,6 +20,8 @@ class SubjectFactory extends Factory
         return [
             'name' => $this->faker->unique()->word(),
             'grade_id' => Grade::pluck('id')->random(),
+            'full_marks' => 100,
+            'pass_marks' => 32,
         ];
     }
 }

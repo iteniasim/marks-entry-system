@@ -18,6 +18,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignIdFor(Grade::class)->constrained()->cascadeOnDelete();
+            $table->unsignedInteger('full_marks');
+            $table->unsignedInteger('pass_marks');
             $table->timestamps();
 
             $table->unique(['name', 'grade_id']);

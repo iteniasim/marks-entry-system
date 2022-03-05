@@ -13,6 +13,8 @@ const props = defineProps({
 const subjectForm = useForm({
     name: props.subject.name,
     grade_id: props.subject.grade_id,
+    full_marks: props.subject.full_marks,
+    pass_marks: props.subject.pass_marks,
 })
 </script>
 

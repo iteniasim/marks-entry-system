@@ -32,22 +32,30 @@ const props = defineProps({
                     <thead class>
                         <tr class>
                             <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Name</th>
+                            <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Full Marks</th>
+                            <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Pass Marks</th>
                             <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
                         <tr
-                            v-for="(exam, index) in props.subjects"
-                            :key="`exam-${index}`"
+                            v-for="(subject, index) in props.subjects"
+                            :key="`subject-${index}`"
                         >
                             <td class="px-3 py-2 whitespace-no-wrap">
-                                {{ exam.name }}
+                                {{ subject.name }}
+                            </td>
+                            <td class="px-3 py-2 whitespace-no-wrap">
+                                {{ subject.full_marks }}
+                            </td>
+                            <td class="px-3 py-2 whitespace-no-wrap">
+                                {{ subject.pass_marks }}
                             </td>
                             <td class="flex items-center gap-4">
-                                <Link class="btn btn-link" :href="route('subjects.edit', exam.id)">
+                                <Link class="btn btn-link" :href="route('subjects.edit', subject.id)">
                                     <t-button>Edit</t-button>
                                 </Link>
-                                <Link class="btn btn-link" method="delete" as="button" type="button" :href="route('subjects.destroy', exam.id)">
+                                <Link class="btn btn-link" method="delete" as="button" type="button" :href="route('subjects.destroy', subject.id)">
                                     <t-button>Delete</t-button>
                                 </Link>
                             </td>
