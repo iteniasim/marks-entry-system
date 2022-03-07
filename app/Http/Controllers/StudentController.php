@@ -17,7 +17,7 @@ class StudentController extends Controller
     public function index()
     {
         return inertia('Students/Index', [
-            'students' => Student::with('grade')->get(),
+            'students' => Student::with('grade')->orderBy('grade_id')->get(),
         ]);
     }
 

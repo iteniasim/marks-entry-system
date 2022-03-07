@@ -17,7 +17,9 @@ class SubjectController extends Controller
     public function index()
     {
         return inertia('Subjects/Index', [
-            'subjects' => Subject::all(),
+            'subjects' => Subject::with(['grade' => function ($query) {
+                $query->orderBY('name');
+            }])->get(),
         ]);
     }
 
