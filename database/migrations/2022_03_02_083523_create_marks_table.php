@@ -19,10 +19,10 @@ return new class extends Migration
     {
         Schema::create('marks', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Student::class)->constrained();
-            $table->foreignIdFor(Subject::class)->constrained();
-            $table->foreignIdFor(Exam::class)->constrained();
-            $table->foreignIdFor(Grade::class)->constrained();
+            $table->foreignIdFor(Student::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Subject::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Exam::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Grade::class)->constrained()->cascadeOnDelete();
             $table->integer('full_marks');
             $table->integer('pass_marks');
             $table->integer('obtained_marks');
