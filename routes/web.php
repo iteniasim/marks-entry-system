@@ -27,10 +27,17 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
     Route::resource('students', StudentController::class);
+    Route::get('/grade/{grade}/students', [StudentController::class, 'studentsOfGrade'])
+        ->name('studentsOfGrade');
+
     Route::resource('exams', ExamController::class);
+
     Route::resource('grades', GradeController::class);
+
     Route::resource('subjects', SubjectController::class);
+
     Route::resource('marks', MarkController::class);
 });
 

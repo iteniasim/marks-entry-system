@@ -21,6 +21,13 @@ class StudentController extends Controller
         ]);
     }
 
+    public function studentsOfGrade(Grade $grade)
+    {
+        return response()->json([
+            'students' => Student::where('grade_id', $grade->id)->get(),
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

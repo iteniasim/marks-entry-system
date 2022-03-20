@@ -31,11 +31,9 @@ class MarkController extends Controller
      */
     public function create()
     {
-        $students = Student::all();
-        $subjects = Subject::all();
         $exams = Exam::all();
         $grades = Grade::all();
-        return inertia('Marks/Create', compact('students', 'subjects', 'exams', 'grades'));
+        return inertia('Marks/Create', compact('grades', 'exams'));
     }
 
     /**
