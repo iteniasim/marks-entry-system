@@ -1,38 +1,80 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, useForm } from '@inertiajs/inertia-vue3'
-import { watch, computed } from 'vue'
-import { TRichSelect, TInput, TButton } from '@variantjs/vue'
+import { watch, ref } from 'vue'
+import { TRichSelect, TButton, TModal, TInput } from '@variantjs/vue'
+import axios from 'axios'
 
 const pageTitle = 'Marks Entry'
 
 const props = defineProps({
-    students: Object,
-    subjects: Object,
     exams: Object,
     grades: Object,
 })
 
+const selectedGradeId = ref(null)
+
+const studentsOfGrade = ref([])
+
+const subjectsOfGrade = ref([])
+
+const modalDetails = ref({
+    show: false,
+    title: null,
+})
+
 const markForm = useForm({
     student_id: null,
-    subject_id: null,
     exam_id: null,
     grade_id: null,
-    obtained_marks: null,
+    subject_ids: [],
+    obtained_marks: {},
 })
 
-const displaySubjects = computed(() => {
-    if (markForm.student_id === null) {
-        return {}
-    }
-    let selectedStudent = props.students.find((student) => student.id == markForm.student_id)
-    return props.subjects.filter(subject => subject.grade_id === selectedStudent.grade_id)
+watch(selectedGradeId, () => {
+    studentsOfGrade.value = []
+    axios.get(route('gradeData', selectedGradeId.value)).then(res => {
+        studentsOfGrade.value = res.data.students
+        subjectsOfGrade.value = res.data.subjects
+        markForm.grade_id = selectedGradeId.value
+        markForm.subject_ids = subjectsOfGrade.value.map(subject => subject.id)
+        markForm.obtained_marks = {}
+        markForm.subject_ids.forEach(subjectId => {
+            markForm.obtained_marks[subjectId] = 0
+        })
+    })
 })
 
-watch(markForm, () => {
-    let selectedStudent = props.students.find((student) => student.id == markForm.student_id)
-    markForm.grade_id = selectedStudent.grade_id
-})
+const openMarksEntryModal = (studentId, examId) => {
+    let selectedStudent = studentsOfGrade.value.find(student => student.id === studentId)
+    let selectedExam = props.exams.find(exam => exam.id === examId)
+    markForm.student_id = selectedStudent.id
+    markForm.exam_id = selectedExam.id
+    modalDetails.value.show = true
+    modalDetails.value.title = `${selectedStudent.name} (Student) marks for ${selectedExam.name} (Exam)`
+}
+
+const closeMarksEntryModal = () => {
+    modalDetails.value.show = false
+    modalDetails.value.title = ''
+
+    markForm.student_id = null
+    markForm.exam_id = null
+    markForm.obtained_marks = {}
+    markForm.subject_ids.forEach(subjectId => {
+        markForm.obtained_marks[subjectId] = 0
+    })
+}
+
+const saveMarks = () => {
+    markForm.post(route('marks.store'), {
+        onSuccess: () => {
+            closeMarksEntryModal()
+        },
+    }).then(() => {
+        console.log('marks saved')
+    })
+}
 </script>
 
 <template>
@@ -47,83 +89,103 @@ watch(markForm, () => {
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="bg-white shadow-sm overflow-none sm:rounded-lg">
                     <div class="px-6 py-5">
-                        <form @submit.prevent="markForm.post(route('marks.store'))">
-                            <div class="grid grid-cols-2 gap-5">
+                        <div class="flex flex-col gap-4">
+                            <!-- Grade -->
+                            <div>
+                                <label class="label">
+                                    <span class="label-text">Grades</span>
+                                </label>
                                 <div>
-                                    <label class="label">
-                                        <span class="label-text">Student</span>
-                                    </label>
                                     <t-rich-select
-                                        :options="props.students"
-                                        v-model="markForm.student_id"
-                                        name="student_id"
-                                        placeholder="Select Student"
-                                        value-attribute="id"
-                                        text-attribute="name"
-                                    />
-                                </div>
-                                <div>
-                                    <label class="label">
-                                        <span class="label-text">Subject</span>
-                                    </label>
-                                    <t-rich-select
-                                        :options="displaySubjects"
-                                        v-model="markForm.subject_id"
-                                        name="subject_id"
-                                        placeholder="Select Subject"
-                                        value-attribute="id"
-                                        text-attribute="name"
-                                    />
-                                </div>
-                                <div>
-                                    <label class="label">
-                                        <span class="label-text">Grades</span>
-                                    </label>
-                                    <t-rich-select
-                                        :disabled="true"
-                                        class="opacity-50"
                                         :options="props.grades"
-                                        v-model="markForm.grade_id"
+                                        v-model="selectedGradeId"
                                         name="grade_id"
                                         placeholder="Select Grade"
                                         value-attribute="id"
                                         text-attribute="name"
                                     />
                                 </div>
-                                <div>
-                                    <label class="label">
-                                        <span class="label-text">Exam</span>
-                                    </label>
-                                    <t-rich-select
-                                        name="exam_id"
-                                        v-model="markForm.exam_id"
-                                        :options="props.exams"
-                                        placeholder="Select Exam"
-                                        value-attribute="id"
-                                        text-attribute="name"
-                                    />
-                                </div>
-                                <div>
-                                    <label class="label">
-                                        <span class="label-text">Obtained Marks</span>
-                                    </label>
-                                    <t-input name="obtained_marks" v-model="markForm.obtained_marks" />
-                                </div>
                             </div>
 
-                            <div class="mt-2">
-                                <t-button
-                                    class="bg-blue-500"
-                                    :class="{ 'opacity-75': markForm.processing }"
-                                    :disabled="markForm.processing"
-                                >
-                                    Save
-                                </t-button>
+                            <div>
+                                <div v-if="studentsOfGrade.length">
+                                    <table class="min-w-full border border-gray-200 divide-y divide-gray-100 shadow-sm">
+                                        <thead class>
+                                            <tr class>
+                                                <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Student Name</th>
+                                                <th v-for="(exam, index) in props.exams" :key="`exam-${index}`" class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">
+                                                    {{ exam.name }}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-100">
+                                            <tr
+                                                v-for="(student, index) in studentsOfGrade"
+                                                :key="`student-${index}`"
+                                            >
+                                                <td class="px-3 py-2 whitespace-no-wrap">
+                                                    {{ student.name }}
+                                                </td>
+                                                <td v-for="(exam, examModalIndex) in props.exams" :key="`exam-marks-modal-${examModalIndex}`" class="px-3 py-2 whitespace-no-wrap">
+                                                    <t-button @click="openMarksEntryModal(student.id, exam.id)">Enter Marks</t-button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div v-else>
+                                    No students in selected grade.
+                                </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <t-modal
+            v-model="modalDetails.show"
+            :header="modalDetails.title"
+        >
+            <table class="min-w-full border border-gray-200 divide-y divide-gray-100 shadow-sm">
+                <thead class>
+                    <tr class>
+                        <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Subject Name</th>
+                        <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Full Marks</th>
+                        <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Pass Marks</th>
+                        <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Obtained Marks</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-100">
+                    <tr
+                        v-for="(subject, index) in subjectsOfGrade"
+                        :key="`subject-${index}-student-${markForm.student_id}`"
+                    >
+                        <td class="px-3 py-2 whitespace-no-wrap">
+                            {{ subject.name }}
+                        </td>
+                        <td class="px-3 py-2 whitespace-no-wrap">
+                            {{ subject.full_marks }}
+                        </td>
+                        <td class="px-3 py-2 whitespace-no-wrap">
+                            {{ subject.pass_marks }}
+                        </td>
+                        <td class="px-3 py-2 whitespace-no-wrap">
+                            <t-input v-model="markForm.obtained_marks[subject.id]" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <template #footer>
+                <div class="flex justify-between">
+                    <t-button @click="closeMarksEntryModal" type="button">
+                        Cancel
+                    </t-button>
+                    <t-button class="mt-8" @click="saveMarks()" type="button" :disabled="markForm.processing">
+                        Save
+                    </t-button>
+                </div>
+            </template>
+        </t-modal>
     </BreezeAuthenticatedLayout>
 </template>
