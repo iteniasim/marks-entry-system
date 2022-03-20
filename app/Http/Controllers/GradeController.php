@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreGradeRequest;
 use App\Http\Requests\UpdateGradeRequest;
 use App\Models\Grade;
+use App\Models\Student;
+use App\Models\Subject;
 
 class GradeController extends Controller
 {
@@ -17,6 +19,14 @@ class GradeController extends Controller
     {
         return inertia('Grades/Index', [
             'grades' => Grade::all(),
+        ]);
+    }
+
+    public function gradeData(Grade $grade)
+    {
+        return response()->json([
+            'students' => Student::where('grade_id', $grade->id)->get(),
+            'subjects' => Subject::where('grade_id', $grade->id)->get(),
         ]);
     }
 
