@@ -6,6 +6,7 @@ use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Grade;
 use App\Models\Student;
+use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
@@ -14,10 +15,29 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $students = Student::when($request->has('search'), function ($query) use ($request) {
+            return $query->where('name', 'like', '%' . $request->search . '%');
+        })
+            ->when($request->has('grade'), function ($query) use ($request) {
+                return $query->where('grade_id', $request->grade);
+            })
+            ->with('grade')
+            ->orderBy('grade_id')
+            ->get();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'students' => $students,
+                'search' => $request->search,
+                'grade' => $request->grade,
+            ]);
+        }
+
         return inertia('Students/Index', [
-            'students' => Student::with('grade')->orderBy('grade_id')->get(),
+            'grades' => Grade::all(),
+            'students' => $students,
         ]);
     }
 
