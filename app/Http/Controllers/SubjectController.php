@@ -6,6 +6,7 @@ use App\Http\Requests\StoreSubjectRequest;
 use App\Http\Requests\UpdateSubjectRequest;
 use App\Models\Grade;
 use App\Models\Subject;
+use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
@@ -14,12 +15,30 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return inertia('Subjects/Index', [
-            'subjects' => Subject::with(['grade' => function ($query) {
+        $subjects = Subject::when($request->has('search'), function ($query) use ($request) {
+            return $query->where('name', 'like', '%' . $request->search . '%');
+        })
+            ->when($request->has('grade'), function ($query) use ($request) {
+                return $query->where('grade_id', $request->grade);
+            })
+            ->with(['grade' => function ($query) {
                 $query->orderBY('name');
-            }])->get(),
+            }])
+            ->get();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'subjects' => $subjects,
+                'search' => $request->search,
+                'grade' => $request->grade,
+            ]);
+        }
+
+        return inertia('Subjects/Index', [
+            'subjects' => $subjects,
+            'grades' => Grade::all(),
         ]);
     }
 
