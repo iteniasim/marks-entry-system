@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreExamRequest;
 use App\Http\Requests\UpdateExamRequest;
 use App\Models\Exam;
+use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
@@ -13,10 +14,23 @@ class ExamController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $exams = Exam::when($request->has('search'),
+            function ($query) use ($request) {
+                return $query->where('name', 'like', '%' . $request->search . '%');
+            })
+            ->get();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'exams' => $exams,
+                'search' => $request->search,
+            ]);
+        }
+
         return inertia('Exams/Index', [
-            'exams' => Exam::all(),
+            'exams' => $exams,
         ]);
     }
 
