@@ -109,7 +109,7 @@ watch(searchGrade, debounce(fetchSearchResults, 2000))
                             </tr>
                         </template>
                         <tr v-else>
-                            <td class="px-3 py-2 whitespace-no-wrap" colspan="4">
+                            <td class="px-3 py-2 whitespace-no-wrap" colspan="5">
                                 No Subjects Available
                             </td>
                         </tr>
