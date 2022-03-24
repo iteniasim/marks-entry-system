@@ -24,8 +24,8 @@ const searchGrade = ref(null)
 
 const fetchSearchResults = () => {
     axios.get(route('students.index', { search: search.value, grade: searchGrade.value })).then(res => {
-        search.value = res.data.search
-        searchGrade.value = parseInt(res.data.grade)
+        search.value = res.data.search ? res.data.search : null
+        searchGrade.value = res.data.grade ? parseInt(res.data.grade) : null
         studentList.value = res.data.students
     })
 }
