@@ -73,6 +73,7 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
+        $student->load(['grade', 'marks', 'marks.grade', 'marks.subject', 'marks.exam']);
         return inertia('Students/Show', [
             'student' => $student,
         ]);
