@@ -25,7 +25,7 @@ class GradeController extends Controller
     public function gradeData(Grade $grade)
     {
         return response()->json([
-            'students' => Student::where('grade_id', $grade->id)->get(),
+            'students' => Student::where('grade_id', $grade->id)->with('marks')->get(),
             'subjects' => Subject::where('grade_id', $grade->id)->get(),
         ]);
     }
