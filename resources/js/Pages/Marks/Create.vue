@@ -90,7 +90,7 @@ const saveMarks = () => {
                 <div class="bg-white shadow-sm overflow-none sm:rounded-lg">
                     <div class="px-6 py-5">
                         <div class="flex flex-col gap-4">
-                            <!-- Grade -->
+                            <!-- Select Grade -->
                             <div>
                                 <label class="label">
                                     <span class="label-text">Grades</span>
@@ -106,7 +106,7 @@ const saveMarks = () => {
                                     />
                                 </div>
                             </div>
-
+                            <!-- Student List -->
                             <div>
                                 <div v-if="studentsOfGrade.length">
                                     <table class="min-w-full border border-gray-200 divide-y divide-gray-100 shadow-sm">
