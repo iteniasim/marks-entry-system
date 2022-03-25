@@ -19,8 +19,11 @@ class MarkController extends Controller
      */
     public function index()
     {
+        $students = Student::whereHas('marks')
+            ->get();
+
         return inertia('Marks/Index', [
-            'marks' => Mark::with(['student', 'subject', 'exam', 'grade'])->get(),
+            'students' => $students,
         ]);
     }
 

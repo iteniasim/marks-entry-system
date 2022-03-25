@@ -6,7 +6,7 @@ import { TButton } from '@variantjs/vue'
 const pageTitle = 'Marks'
 
 const props = defineProps({
-    marks: Object,
+    students: Object,
 })
 </script>
 
@@ -28,48 +28,28 @@ const props = defineProps({
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <table v-if="marks.length" class="min-w-full border border-gray-200 divide-y divide-gray-100 shadow-sm">
+                <table v-if="students.length" class="min-w-full border border-gray-200 divide-y divide-gray-100 shadow-sm">
                     <thead class>
                         <tr class>
                             <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Student</th>
-                            <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Subject</th>
-                            <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Exam</th>
                             <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Grade</th>
-                            <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Full Marks</th>
-                            <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Pass Marks</th>
-                            <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Obtained Marks</th>
                             <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
                         <tr
-                            v-for="(mark, index) in props.marks"
-                            :key="`mark-${index}`"
+                            v-for="(student, index) in props.students"
+                            :key="`student-${index}`"
                         >
                             <td class="px-3 py-2 whitespace-no-wrap">
-                                {{ mark.student.name }}
+                                {{ student.name }}
                             </td>
                             <td class="px-3 py-2 whitespace-no-wrap">
-                                {{ mark.subject.name }}
-                            </td>
-                            <td class="px-3 py-2 whitespace-no-wrap">
-                                {{ mark.exam.name }}
-                            </td>
-                            <td class="px-3 py-2 whitespace-no-wrap">
-                                {{ mark.grade.name }}
-                            </td>
-                            <td class="px-3 py-2 whitespace-no-wrap">
-                                {{ mark.full_marks }}
-                            </td>
-                            <td class="px-3 py-2 whitespace-no-wrap">
-                                {{ mark.pass_marks }}
-                            </td>
-                            <td class="px-3 py-2 whitespace-no-wrap">
-                                {{ mark.obtained_marks }}
+                                {{ student.grade_id }}
                             </td>
                             <td>
-                                <Link class="btn btn-link" :href="route('marks.edit', mark.id)">
-                                    <t-button>Edit</t-button>
+                                <Link class="btn btn-link" :href="route('students.show', student.id)">
+                                    <t-button>View</t-button>
                                 </Link>
                             </td>
                         </tr>
