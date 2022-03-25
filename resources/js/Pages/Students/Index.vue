@@ -3,8 +3,8 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
 import { TButton, TInput, TRichSelect } from '@variantjs/vue'
 import { onMounted, ref, watch } from 'vue'
-import { debounce } from '@/Composables/helpers.js'
 import axios from 'axios'
+var debounce = require('lodash/debounce')
 
 const pageTitle = 'Students'
 

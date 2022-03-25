@@ -1,10 +1,10 @@
 <script setup>
-import { debounce } from '@/Composables/helpers'
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
 import { TButton, TInput } from '@variantjs/vue'
 import axios from 'axios'
 import { onMounted, ref, watch } from 'vue'
+var debounce = require('lodash/debounce')
 
 const pageTitle = 'Exams'
 
