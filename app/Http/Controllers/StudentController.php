@@ -66,20 +66,6 @@ class StudentController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Student $student)
-    {
-        $student->load(['grade', 'marks', 'marks.grade', 'marks.subject', 'marks.exam']);
-        return inertia('Students/Show', [
-            'student' => $student,
-        ]);
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Student  $student
@@ -116,5 +102,13 @@ class StudentController extends Controller
     {
         $student->delete();
         return to_route('students.index');
+    }
+
+    public function studentMarksheets(Student $student)
+    {
+        $student->load(['grade', 'marks', 'marks.grade', 'marks.subject', 'marks.exam']);
+        return inertia('Students/StudentMarkSheets', [
+            'student' => $student,
+        ]);
     }
 }

@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     })->name('dashboard');
 
     Route::resource('students', StudentController::class);
+    Route::get('student/{student}/marksheets', [StudentController::class, 'studentMarksheets'])->name('students.studentMarksheets');
 
     Route::get('/grade/{grade}/students', [GradeController::class, 'gradeData'])
         ->name('gradeData');

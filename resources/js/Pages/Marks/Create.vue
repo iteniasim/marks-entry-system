@@ -82,8 +82,6 @@ const saveMarks = () => {
             closeMarksEntryModal()
             fetchGradeData()
         },
-    }).then(() => {
-        console.log('marks saved')
     })
 }
 </script>
@@ -138,7 +136,7 @@ const saveMarks = () => {
                                                     {{ student.name }}
                                                 </td>
                                                 <td v-for="(exam, examModalIndex) in props.exams" :key="`exam-marks-modal-${examModalIndex}`" class="px-3 py-2 whitespace-no-wrap">
-                                                    <t-button :variant="student.marks.filter(mark=>mark.grade_id === exam.id).length ? 'success' : ''" @click="openMarksEntryModal(student.id, exam.id)">Enter Marks</t-button>
+                                                    <t-button :variant="student.marks.filter(mark => mark.exam_id === exam.id && mark.grade_id === markForm.grade_id).length ? 'success' : ''" @click="openMarksEntryModal(student.id, exam.id)">Enter Marks</t-button>
                                                 </td>
                                             </tr>
                                         </tbody>

@@ -48,7 +48,7 @@ const props = defineProps({
                                 {{ student.grade_id }}
                             </td>
                             <td>
-                                <Link class="btn btn-link" :href="route('students.show', student.id)">
+                                <Link class="btn btn-link" :href="route('students.studentMarksheets', student.id)">
                                     <t-button>View</t-button>
                                 </Link>
                             </td>
