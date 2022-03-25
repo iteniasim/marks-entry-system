@@ -49,15 +49,17 @@ class MarkController extends Controller
     {
         foreach ($request->obtained_marks as $subjectId => $obtainedMark) {
             $subject = Subject::whereId($subjectId)->firstOrFail();
-            Mark::create([
+            Mark::updateOrCreate([
                 'student_id' => $request->student_id,
                 'subject_id' => $subject->id,
                 'exam_id' => $request->exam_id,
                 'grade_id' => $request->grade_id,
-                'full_marks' => $subject->full_marks,
-                'pass_marks' => $subject->pass_marks,
-                'obtained_marks' => $obtainedMark,
-            ]);
+            ],
+                [
+                    'full_marks' => $subject->full_marks,
+                    'pass_marks' => $subject->pass_marks,
+                    'obtained_marks' => $obtainedMark,
+                ]);
         }
         return back()->with('success', 'Marks Saved');
     }

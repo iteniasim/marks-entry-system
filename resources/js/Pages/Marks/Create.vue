@@ -31,23 +31,33 @@ const markForm = useForm({
     obtained_marks: {},
 })
 
+const fetchGradeData = () => axios.get(route('gradeData', selectedGradeId.value)).then(res => {
+    studentsOfGrade.value = res.data.students
+    subjectsOfGrade.value = res.data.subjects
+    markForm.grade_id = selectedGradeId.value
+    markForm.subject_ids = subjectsOfGrade.value.map(subject => subject.id)
+    markForm.obtained_marks = {}
+    markForm.subject_ids.forEach(subjectId => {
+        markForm.obtained_marks[subjectId] = 0
+    })
+})
+
 watch(selectedGradeId, () => {
     studentsOfGrade.value = []
-    axios.get(route('gradeData', selectedGradeId.value)).then(res => {
-        studentsOfGrade.value = res.data.students
-        subjectsOfGrade.value = res.data.subjects
-        markForm.grade_id = selectedGradeId.value
-        markForm.subject_ids = subjectsOfGrade.value.map(subject => subject.id)
-        markForm.obtained_marks = {}
-        markForm.subject_ids.forEach(subjectId => {
-            markForm.obtained_marks[subjectId] = 0
-        })
-    })
+    fetchGradeData()
 })
 
 const openMarksEntryModal = (studentId, examId) => {
     let selectedStudent = studentsOfGrade.value.find(student => student.id === studentId)
     let selectedExam = props.exams.find(exam => exam.id === examId)
+
+    if (selectedStudent.marks.filter(mark => mark.exam_id === examId && mark.grade_id === markForm.grade_id).length) {
+        let marksForSelectedExam = selectedStudent.marks.filter(mark => mark.exam_id === examId && mark.grade_id === markForm.grade_id)
+        markForm.subject_ids.forEach(subjectId => {
+            markForm.obtained_marks[subjectId] = marksForSelectedExam.find(mark => mark.subject_id === subjectId).obtained_marks
+        })
+    }
+
     markForm.student_id = selectedStudent.id
     markForm.exam_id = selectedExam.id
     modalDetails.value.show = true
@@ -70,6 +80,7 @@ const saveMarks = () => {
     markForm.post(route('marks.store'), {
         onSuccess: () => {
             closeMarksEntryModal()
+            fetchGradeData()
         },
     }).then(() => {
         console.log('marks saved')
@@ -146,6 +157,7 @@ const saveMarks = () => {
         <t-modal
             v-model="modalDetails.show"
             :header="modalDetails.title"
+            @hidden="closeMarksEntryModal()"
         >
             <table class="min-w-full border border-gray-200 divide-y divide-gray-100 shadow-sm">
                 <thead class>
@@ -181,7 +193,7 @@ const saveMarks = () => {
                     <t-button @click="closeMarksEntryModal" type="button">
                         Cancel
                     </t-button>
-                    <t-button class="mt-8" @click="saveMarks()" type="button" :disabled="markForm.processing">
+                    <t-button @click="saveMarks()" type="button" :disabled="markForm.processing">
                         Save
                     </t-button>
                 </div>
