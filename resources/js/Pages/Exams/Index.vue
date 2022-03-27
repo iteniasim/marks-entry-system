@@ -3,7 +3,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
 import { TButton, TInput } from '@variantjs/vue'
 import axios from 'axios'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUpdated, ref, watch } from 'vue'
 var debounce = require('lodash/debounce')
 
 const pageTitle = 'Exams'
@@ -15,6 +15,10 @@ const props = defineProps({
 const examList = ref([])
 
 onMounted(() => {
+    examList.value = props.exams
+})
+
+onUpdated(() => {
     examList.value = props.exams
 })
 

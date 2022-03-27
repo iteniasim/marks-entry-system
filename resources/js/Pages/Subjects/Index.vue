@@ -2,7 +2,7 @@
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
 import { TButton, TInput, TRichSelect } from '@variantjs/vue'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUpdated, ref, watch } from 'vue'
 import axios from 'axios'
 var debounce = require('lodash/debounce')
 
@@ -16,6 +16,10 @@ const props = defineProps({
 const subjectList = ref([])
 
 onMounted(() => {
+    subjectList.value = props.subjects
+})
+
+onUpdated(() => {
     subjectList.value = props.subjects
 })
 
