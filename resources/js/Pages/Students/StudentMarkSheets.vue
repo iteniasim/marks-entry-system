@@ -1,8 +1,10 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
-import { Head } from '@inertiajs/inertia-vue3'
+import { Head, Link, useForm } from '@inertiajs/inertia-vue3'
 import { computed, onMounted, ref } from 'vue'
+import { TButton, TInput, TModal } from '@variantjs/vue'
 var uniqWith = require('lodash/uniqWith')
+var uniqBy = require('lodash/uniqBy')
 
 const pageTitle = props.student.name + ' Marks'
 
@@ -11,9 +13,22 @@ const props = defineProps({
 })
 
 const studentData = ref()
+const relatedGrades = ref()
+const relatedExams = ref()
+const relatedSubjects = ref()
 
 onMounted(() => {
     studentData.value = props.student
+    relatedGrades.value = uniqBy(props.student.marks.map(mark => mark.grade), 'id')
+    relatedExams.value = uniqBy(props.student.marks.map(mark => mark.exam), 'id')
+    relatedSubjects.value = uniqBy(props.student.marks.map(mark => mark.subject), 'id')
+
+    markForm.student_id = props.student.id
+    markForm.subject_ids = relatedSubjects.value.map(subject => subject.id)
+    markForm.obtained_marks = {}
+    markForm.subject_ids.forEach(subjectId => {
+        markForm.obtained_marks[subjectId] = 0
+    })
 })
 
 const uniqueExamGradeInSavedMarks = computed(() => {
@@ -36,6 +51,55 @@ const uniqueExamGradeInSavedMarks = computed(() => {
     )
     return marks
 })
+
+const markForm = useForm({
+    student_id: null,
+    exam_id: null,
+    grade_id: null,
+    subject_ids: [],
+    obtained_marks: {},
+})
+
+const modalDetails = ref({
+    show: false,
+    title: null,
+})
+
+const openMarksEntryModal = (examId, gradeId) => {
+    if (props.student.marks.filter(mark => mark.exam_id === examId && mark.grade_id === gradeId).length) {
+        let marksForSelectedExam = props.student.marks.filter(mark => mark.exam_id === examId && mark.grade_id === gradeId)
+        markForm.subject_ids.forEach(subjectId => {
+            markForm.obtained_marks[subjectId] = marksForSelectedExam.find(mark => mark.subject_id === subjectId).obtained_marks
+        })
+    }
+
+    markForm.exam_id = examId
+    markForm.grade_id = gradeId
+    modalDetails.value.show = true
+    modalDetails.value.title = `${props.student.name} (Student) marks for ${relatedExams.value.find(exam => exam.id === examId).name} (Exam) of ${relatedGrades.value.find(grade => grade.id === gradeId).name} (Grade)`
+}
+
+const closeMarksEntryModal = () => {
+    modalDetails.value.show = false
+    modalDetails.value.title = ''
+
+    markForm.student_id = null
+    markForm.exam_id = null
+    markForm.obtained_marks = {}
+    markForm.subject_ids.forEach(subjectId => {
+        markForm.obtained_marks[subjectId] = 0
+    })
+}
+
+const saveMarks = () => {
+    markForm.post(route('marks.store'), {
+        onSuccess: () => {
+            closeMarksEntryModal()
+        },
+    })
+}
+
+const subjectsOfSelectedGrade = computed(() => relatedSubjects.value.filter(subject => subject.grade_id === markForm.grade_id))
 </script>
 
 <template>
@@ -65,6 +129,7 @@ const uniqueExamGradeInSavedMarks = computed(() => {
                                     <tr class>
                                         <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Grade</th>
                                         <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Exam</th>
+                                        <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-100">
@@ -78,6 +143,21 @@ const uniqueExamGradeInSavedMarks = computed(() => {
                                         <td class="px-3 py-2 whitespace-no-wrap">
                                             {{ examGrade.exam.name }}
                                         </td>
+                                        <td class="px-3 py-2 whitespace-no-wrap">
+                                            <div class="flex gap-8">
+                                                <Link :href="route('marks.show', props.student.id)">
+                                                    <t-button>
+                                                        View
+                                                    </t-button>
+                                                </Link>
+                                                <t-button
+                                                    :variant="props.student.marks.filter(mark => mark.exam_id === examGrade.exam.id && mark.grade_id === examGrade.grade.id).length ? 'success' : ''"
+                                                    @click="openMarksEntryModal(examGrade.exam.id, examGrade.grade.id)"
+                                                >
+                                                    Edit Marks
+                                                </t-button>
+                                            </div>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -90,5 +170,51 @@ const uniqueExamGradeInSavedMarks = computed(() => {
                 </div>
             </div>
         </div>
+
+        <t-modal
+            v-model="modalDetails.show"
+            :header="modalDetails.title"
+            @hidden="closeMarksEntryModal()"
+        >
+            <table class="min-w-full border border-gray-200 divide-y divide-gray-100 shadow-sm">
+                <thead class>
+                    <tr class>
+                        <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Subject Name</th>
+                        <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Full Marks</th>
+                        <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Pass Marks</th>
+                        <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Obtained Marks</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-100">
+                    <tr
+                        v-for="(subject, index) in subjectsOfSelectedGrade"
+                        :key="`subject-${index}-student-${markForm.student_id}`"
+                    >
+                        <td class="px-3 py-2 whitespace-no-wrap">
+                            {{ subject.name }}
+                        </td>
+                        <td class="px-3 py-2 whitespace-no-wrap">
+                            {{ subject.full_marks }}
+                        </td>
+                        <td class="px-3 py-2 whitespace-no-wrap">
+                            {{ subject.pass_marks }}
+                        </td>
+                        <td class="px-3 py-2 whitespace-no-wrap">
+                            <t-input v-model="markForm.obtained_marks[subject.id]" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <template #footer>
+                <div class="flex justify-between">
+                    <t-button @click="closeMarksEntryModal" type="button">
+                        Cancel
+                    </t-button>
+                    <t-button @click="saveMarks()" type="button" :disabled="markForm.processing">
+                        Save
+                    </t-button>
+                </div>
+            </template>
+        </t-modal>
     </BreezeAuthenticatedLayout>
 </template>

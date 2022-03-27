@@ -12,11 +12,9 @@ const props = defineProps({
     grades: Object,
 })
 
-const selectedGradeId = ref(null)
-
-const studentsOfGrade = ref([])
-
-const subjectsOfGrade = ref([])
+const selectedGradeId = ref()
+const studentsOfGrade = ref()
+const subjectsOfGrade = ref()
 
 const modalDetails = ref({
     show: false,
@@ -136,7 +134,9 @@ const saveMarks = () => {
                                                     {{ student.name }}
                                                 </td>
                                                 <td v-for="(exam, examModalIndex) in props.exams" :key="`exam-marks-modal-${examModalIndex}`" class="px-3 py-2 whitespace-no-wrap">
-                                                    <t-button :variant="student.marks.filter(mark => mark.exam_id === exam.id && mark.grade_id === markForm.grade_id).length ? 'success' : ''" @click="openMarksEntryModal(student.id, exam.id)">Enter Marks</t-button>
+                                                    <t-button :variant="student.marks.filter(mark => mark.exam_id === exam.id && mark.grade_id === markForm.grade_id).length ? 'success' : ''" @click="openMarksEntryModal(student.id, exam.id)">
+                                                        Enter Marks
+                                                    </t-button>
                                                 </td>
                                             </tr>
                                         </tbody>
