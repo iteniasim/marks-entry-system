@@ -65,19 +65,6 @@ class MarkController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Mark  $mark
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Mark $mark)
-    {
-        return inertia('Mark/Show', [
-            'mark' => $mark,
-        ]);
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Mark  $mark
@@ -121,5 +108,15 @@ class MarkController extends Controller
     {
         $mark->delete();
         return to_route('marks.index');
+    }
+
+    public function marksOfStudentGradeExam(Student $student, Grade $grade, Exam $exam)
+    {
+        $marks = Mark::where('student_id', $student->id)
+            ->where('grade_id', $grade->id)
+            ->where('exam_id', $exam->id)
+            ->with('subject')
+            ->get();
+        return inertia('Marks/Show', compact('student', 'grade', 'exam', 'marks'));
     }
 }

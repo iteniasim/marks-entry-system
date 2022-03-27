@@ -145,7 +145,13 @@ const subjectsOfSelectedGrade = computed(() => relatedSubjects.value.filter(subj
                                         </td>
                                         <td class="px-3 py-2 whitespace-no-wrap">
                                             <div class="flex gap-8">
-                                                <Link :href="route('marks.show', props.student.id)">
+                                                <Link
+                                                    :href="route('student.grade.exam.marks', {
+                                                        student:props.student.id,
+                                                        grade:examGrade.grade.id,
+                                                        exam:examGrade.exam.id
+                                                    })"
+                                                >
                                                     <t-button>
                                                         View
                                                     </t-button>
