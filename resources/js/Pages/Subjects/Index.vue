@@ -4,6 +4,7 @@ import { Head, Link } from '@inertiajs/inertia-vue3'
 import { TButton, TInput, TRichSelect } from '@variantjs/vue'
 import { onMounted, onUpdated, ref, watch } from 'vue'
 import axios from 'axios'
+import PaginationComponent from '@/Components/PaginationComponent.vue'
 var debounce = require('lodash/debounce')
 
 const pageTitle = 'Subjects'
@@ -85,9 +86,9 @@ watch(searchGrade, debounce(fetchSearchResults, 2000))
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
-                        <template v-if="subjectList.length">
+                        <template v-if="subjectList.total">
                             <tr
-                                v-for="(subject, index) in subjectList"
+                                v-for="(subject, index) in subjectList.data"
                                 :key="`subject-${index}`"
                             >
                                 <td class="px-3 py-2 whitespace-no-wrap">
@@ -119,6 +120,7 @@ watch(searchGrade, debounce(fetchSearchResults, 2000))
                         </tr>
                     </tbody>
                 </table>
+                <pagination-component :data="subjectList" />
             </div>
         </div>
     </BreezeAuthenticatedLayout>

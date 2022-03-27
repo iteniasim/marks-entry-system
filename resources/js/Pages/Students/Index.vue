@@ -3,6 +3,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
 import { TButton, TInput, TRichSelect } from '@variantjs/vue'
 import { onMounted, onUpdated, ref, watch } from 'vue'
+import PaginationComponent from '@/Components/PaginationComponent.vue'
 import axios from 'axios'
 var debounce = require('lodash/debounce')
 
@@ -84,9 +85,9 @@ watch(searchGrade, debounce(fetchSearchResults, 2000))
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
-                        <template v-if="studentList.length">
+                        <template v-if="studentList.total">
                             <tr
-                                v-for="(student, index) in studentList"
+                                v-for="(student, index) in studentList.data"
                                 :key="`student-${index}`"
                             >
                                 <td class="px-3 py-2 whitespace-no-wrap">
@@ -119,6 +120,7 @@ watch(searchGrade, debounce(fetchSearchResults, 2000))
                         </tr>
                     </tbody>
                 </table>
+                <pagination-component :data="studentList" />
             </div>
         </div>
     </BreezeAuthenticatedLayout>

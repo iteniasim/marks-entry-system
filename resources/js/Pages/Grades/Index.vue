@@ -1,6 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, Link } from '@inertiajs/inertia-vue3'
+import PaginationComponent from '@/Components/PaginationComponent.vue'
 import { TButton } from '@variantjs/vue'
 
 const pageTitle = 'Grades'
@@ -37,7 +38,7 @@ const props = defineProps({
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
                         <tr
-                            v-for="(grade, index) in props.grades"
+                            v-for="(grade, index) in props.grades.data"
                             :key="`grade-${index}`"
                         >
                             <td class="px-3 py-2 whitespace-no-wrap">
@@ -54,6 +55,7 @@ const props = defineProps({
                         </tr>
                     </tbody>
                 </table>
+                <pagination-component :data="props.grades" />
             </div>
         </div>
     </BreezeAuthenticatedLayout>

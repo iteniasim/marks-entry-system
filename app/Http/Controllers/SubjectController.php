@@ -26,7 +26,7 @@ class SubjectController extends Controller
             ->with(['grade' => function ($query) {
                 $query->orderBY('name');
             }])
-            ->get();
+            ->paginate(10);
 
         if ($request->expectsJson()) {
             return response()->json([

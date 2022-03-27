@@ -25,7 +25,7 @@ class StudentController extends Controller
             })
             ->with('grade')
             ->orderBy('grade_id')
-            ->get();
+            ->paginate(10);
 
         if ($request->expectsJson()) {
             return response()->json([
