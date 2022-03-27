@@ -13,8 +13,8 @@ const props = defineProps({
 })
 
 const selectedGradeId = ref()
-const studentsOfGrade = ref()
-const subjectsOfGrade = ref()
+const studentsOfGrade = ref([])
+const subjectsOfGrade = ref([])
 
 const modalDetails = ref({
     show: false,

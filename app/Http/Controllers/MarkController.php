@@ -20,7 +20,7 @@ class MarkController extends Controller
     public function index()
     {
         $students = Student::whereHas('marks')
-            ->get();
+            ->paginate(10);
 
         return inertia('Marks/Index', [
             'students' => $students,
