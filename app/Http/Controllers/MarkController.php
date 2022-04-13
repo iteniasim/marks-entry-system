@@ -120,14 +120,14 @@ class MarkController extends Controller
             ->with(['subject'])
             ->get();
 
-      $otherExamMarks = $exam->is_final ? Mark::where('student_id', $student->id)
+        $otherExamMarks = $exam->is_final ? Mark::where('student_id', $student->id)
             ->where('grade_id', $grade->id)
             ->whereNot('exam_id', $exam->id)
             ->with(['subject'])
             ->get()
             ->groupBy('exam_id') : [];
 
-        $averageGpa = $markGrade = MarkGrading::where('lower_mark_limit', '<=', $marks->avg('obtained_marks'))
+        $averageGpa = MarkGrading::where('lower_mark_limit', '<=', $marks->avg('obtained_marks'))
             ->where('upper_mark_limit', '>=', $marks->avg('obtained_marks'))
             ->first();
 
