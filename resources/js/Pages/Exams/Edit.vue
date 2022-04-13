@@ -1,7 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, useForm } from '@inertiajs/inertia-vue3'
-import { TInput, TButton } from '@variantjs/vue'
+import { TInput, TButton, TCheckbox } from '@variantjs/vue'
 
 const pageTitle = 'Edit Exam'
 
@@ -11,6 +11,7 @@ const props = defineProps({
 
 const examForm = useForm({
     name: props.exam.name,
+    isFinal: props.exam.is_final ? true : false,
 })
 </script>
 
@@ -28,14 +29,23 @@ const examForm = useForm({
                     <div class="px-6 py-5">
                         <form @submit.prevent="examForm.put(route('exams.update', props.exam.id))">
                             <div>
-                                <label class="label">
-                                    <span class="label-text">Name</span>
-                                </label>
-                                <TInput
-                                    name="name"
-                                    v-model="examForm.name"
-                                    placeholder="Name"
-                                />
+                                <div>
+                                    <label class="label">
+                                        <span class="label-text">Name</span>
+                                    </label>
+                                    <TInput
+                                        name="name"
+                                        v-model="examForm.name"
+                                        placeholder="Name"
+                                    />
+
+                                    <div class="flex">
+                                        <label class="flex items-center ml-2">
+                                            <TCheckbox name="is_final" v-model="examForm.isFinal" />
+                                            <span class="ml-2 text-sm">Is Final Term</span>
+                                        </label>
+                                    </div>
+                                </div>
                                 <div
                                     v-if="examForm.errors.name"
                                 >

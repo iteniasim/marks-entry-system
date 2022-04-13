@@ -52,6 +52,12 @@ class ExamController extends Controller
      */
     public function store(StoreExamRequest $request)
     {
+        if ($request->is_final) {
+            Exam::whereNotNull('id')->update([
+                'is_final' => 0,
+            ]);
+        }
+
         Exam::create($request->validated());
         return to_route('exams.index');
     }
@@ -91,6 +97,12 @@ class ExamController extends Controller
      */
     public function update(UpdateExamRequest $request, Exam $exam)
     {
+        if ($request->is_final) {
+            Exam::whereNot('id', $exam->id)->update([
+                'is_final' => 0,
+            ]);
+        }
+
         $exam->update($request->validated());
         return to_route('exams.index');
     }

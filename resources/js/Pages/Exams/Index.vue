@@ -75,7 +75,7 @@ watch(search, debounce(fetchSearchResults, 2000))
                                 :key="`exam-${index}`"
                             >
                                 <td class="px-3 py-2 whitespace-no-wrap">
-                                    {{ exam.name }}
+                                    {{ exam.name }} <span class="font-semibold">{{ exam.is_final ? '(Final Term)' : '' }}</span>
                                 </td>
                                 <td class="flex items-center gap-4">
                                     <Link class="btn btn-link" :href="route('exams.edit', exam.id)">

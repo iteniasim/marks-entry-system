@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateMarkRequest;
 use App\Models\Exam;
 use App\Models\Grade;
 use App\Models\Mark;
+use App\Models\MarkGrading;
 use App\Models\Student;
 use App\Models\Subject;
 
@@ -112,11 +113,24 @@ class MarkController extends Controller
 
     public function marksOfStudentGradeExam(Student $student, Grade $grade, Exam $exam)
     {
+        $exams = Exam::all();
         $marks = Mark::where('student_id', $student->id)
             ->where('grade_id', $grade->id)
             ->where('exam_id', $exam->id)
-            ->with('subject')
+            ->with(['subject'])
             ->get();
-        return inertia('Marks/Show', compact('student', 'grade', 'exam', 'marks'));
+
+      $otherExamMarks = $exam->is_final ? Mark::where('student_id', $student->id)
+            ->where('grade_id', $grade->id)
+            ->whereNot('exam_id', $exam->id)
+            ->with(['subject'])
+            ->get()
+            ->groupBy('exam_id') : [];
+
+        $averageGpa = $markGrade = MarkGrading::where('lower_mark_limit', '<=', $marks->avg('obtained_marks'))
+            ->where('upper_mark_limit', '>=', $marks->avg('obtained_marks'))
+            ->first();
+
+        return inertia('Marks/Show', compact('student', 'grade', 'exam', 'marks', 'exams', 'averageGpa', 'otherExamMarks'));
     }
 }
