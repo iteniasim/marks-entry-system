@@ -47,7 +47,7 @@ const props = defineProps({
                                     {{ student.name }}
                                 </td>
                                 <td class="px-3 py-2 whitespace-no-wrap">
-                                    {{ student.grade_id }}
+                                    {{ student.grade.name }}
                                 </td>
                                 <td>
                                     <Link class="btn btn-link" :href="route('students.studentMarksheets', student.id)">

@@ -5,6 +5,7 @@ use App\Http\Controllers\GradeController;
 use App\Http\Controllers\MarkController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\UpgradeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -43,6 +44,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::resource('marks', MarkController::class)->except('show');
     Route::get('/marks/{student}/{grade}/{exam}', [MarkController::class, 'marksOfStudentGradeExam'])
         ->name('student.grade.exam.marks');
+
+    Route::get('upgrade/grade', [UpgradeController::class, 'upgradeStudentsOfGradeForm'])->name('form.upgradeStudentsOfGrade');
+    Route::post('upgrade/grade', [UpgradeController::class, 'upgradeStudentsOfGrade'])->name('upgradeStudentsOfGrade');
 });
 
 require __DIR__ . '/auth.php';
