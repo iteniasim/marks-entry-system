@@ -26,6 +26,8 @@ class UpdateSubjectRequest extends FormRequest
         return [
             'name' => 'required',
             'grade_id' => 'required|exists:grades,id',
+            'full_marks' => 'required|integer',
+            'pass_marks' => 'required|integer|lt:full_marks',
         ];
     }
 }
