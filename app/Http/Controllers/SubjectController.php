@@ -28,6 +28,10 @@ class SubjectController extends Controller
             }])
             ->paginate(10);
 
+        if ($request->has('grade')) {
+            $subjects = $subjects->appends(['grade' => 1]);
+        }
+
         if ($request->expectsJson()) {
             return response()->json([
                 'subjects' => $subjects,
