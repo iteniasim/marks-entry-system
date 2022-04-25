@@ -34,7 +34,7 @@ const props = defineProps({
                         <thead class>
                             <tr class>
                                 <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Student</th>
-                                <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Grade</th>
+                                <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Current Grade</th>
                                 <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Actions</th>
                             </tr>
                         </thead>

@@ -6,6 +6,7 @@ use App\Http\Controllers\MarkController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UpgradeController;
+use App\Models\Grade;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -26,7 +27,9 @@ Route::get('/', function () {
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        return Inertia::render('Dashboard', [
+            'grades' => Grade::all(),
+        ]);
     })->name('dashboard');
 
     Route::resource('students', StudentController::class);
