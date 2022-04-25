@@ -40,9 +40,7 @@ const subjectForm = useForm({
                                         v-model="subjectForm.name"
                                         placeholder="Name"
                                     />
-                                    <div
-                                        v-if="subjectForm.errors.name"
-                                    >
+                                    <div v-if="subjectForm.errors.name">
                                         {{ subjectForm.errors.name }}
                                     </div>
                                 </div>
@@ -58,9 +56,7 @@ const subjectForm = useForm({
                                         value-attribute="id"
                                         text-attribute="name"
                                     />
-                                    <div
-                                        v-if="subjectForm.errors.grade_id"
-                                    >
+                                    <div v-if="subjectForm.errors.grade_id">
                                         {{ subjectForm.errors.grade_id }}
                                     </div>
                                 </div>
@@ -74,9 +70,7 @@ const subjectForm = useForm({
                                         v-model="subjectForm.full_marks"
                                         placeholder="Full Marks"
                                     />
-                                    <div
-                                        v-if="subjectForm.errors.full_marks"
-                                    >
+                                    <div v-if="subjectForm.errors.full_marks">
                                         {{ subjectForm.errors.full_marks }}
                                     </div>
                                 </div>
@@ -90,9 +84,7 @@ const subjectForm = useForm({
                                         v-model="subjectForm.pass_marks"
                                         placeholder="Pass Marks"
                                     />
-                                    <div
-                                        v-if="subjectForm.errors.pass_marks"
-                                    >
+                                    <div v-if="subjectForm.errors.pass_marks">
                                         {{ subjectForm.errors.pass_marks }}
                                     </div>
                                 </div>
