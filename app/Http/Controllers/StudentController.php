@@ -6,6 +6,7 @@ use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Grade;
 use App\Models\Student;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -24,6 +25,9 @@ class StudentController extends Controller
                 return $query->where('grade_id', $request->grade);
             })
             ->with('grade')
+            ->when($request->withMarks, function ($query) {
+                $query->with('marks');
+            })
             ->orderBy('grade_id')
             ->paginate(10);
 
@@ -32,6 +36,7 @@ class StudentController extends Controller
                 'students' => $students,
                 'search' => $request->search,
                 'grade' => $request->grade,
+                'gradeSubjects' => Subject::where('grade_id', $request->grade)->get(),
             ]);
         }
 
