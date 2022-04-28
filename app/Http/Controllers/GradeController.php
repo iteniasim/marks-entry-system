@@ -25,9 +25,10 @@ class GradeController extends Controller
 
     public function gradeData(Grade $grade)
     {
+        // user is expected to only send only one of onlySubjects or onlySubjects as query param, not both at the same time, no param is fine
         return response()->json([
-            'students' => Student::where('grade_id', $grade->id)->with('marks')->get(),
-            'subjects' => Subject::where('grade_id', $grade->id)->get(),
+            'students' => request()->onlySubjects ? null : Student::where('grade_id', $grade->id)->with('marks')->get(),
+            'subjects' => request()->onlyStudents ? null : Subject::where('grade_id', $grade->id)->get(),
         ]);
     }
 
