@@ -8,10 +8,22 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    params: {
+        type: Object,
+        default: null,
+    },
 })
 const emit = defineEmits(['update:pageData'])
 
 const call = (url) => {
+    url = new URL(url)
+
+    if (props.params !== null) {
+        props.params.forEach(param => {
+            url.searchParams.set(param.name, param.value)
+        })
+    }
+
     axios.get(url).then(res => {
         emit('update:pageData', res.data)
     })
