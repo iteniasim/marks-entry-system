@@ -47,8 +47,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::resource('subjects', SubjectController::class);
 
     Route::resource('marks', MarkController::class)->except('show');
-    Route::get('/marks/{student}/{grade}/{exam}', [MarkController::class, 'marksOfStudentGradeExam'])
+    Route::get('/marks/filter/{student}/{grade}/{exam}', [MarkController::class, 'marksOfStudentGradeExam'])
         ->name('student.grade.exam.marks');
+    Route::get('/marks/all/{year}/{exam}/{grade}', [MarkController::class, 'studentMarksForYearExamGrade'])
+        ->name('year.exam.grade.marks');
 
     Route::get('upgrade/grade', [UpgradeController::class, 'upgradeStudentsOfGradeForm'])->name('form.upgradeStudentsOfGrade');
     Route::post('upgrade/grade', [UpgradeController::class, 'upgradeStudentsOfGrade'])->name('upgradeStudentsOfGrade');
