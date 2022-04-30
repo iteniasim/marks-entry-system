@@ -10,6 +10,7 @@ use App\Models\Mark;
 use App\Models\MarkGrading;
 use App\Models\Student;
 use App\Models\Subject;
+use Carbon\Carbon;
 
 class MarkController extends Controller
 {
@@ -56,6 +57,7 @@ class MarkController extends Controller
                 'subject_id' => $subject->id,
                 'exam_id' => $request->exam_id,
                 'grade_id' => $request->grade_id,
+                'year' => Carbon::now()->format('Y'),
             ],
                 [
                     'full_marks' => $subject->full_marks,
@@ -133,5 +135,29 @@ class MarkController extends Controller
             ->first();
 
         return inertia('Marks/Show', compact('student', 'grade', 'exam', 'marks', 'exams', 'averageGpa', 'otherExamMarks'));
+    }
+
+    public function studentMarksForYearExamGrade($year, Exam $exam, Grade $grade)
+    {
+        $marks = Mark::where('grade_id', $grade->id)
+            ->where('exam_id', $exam->id)
+            ->where('year', $year)
+            ->with(['subject'])
+            ->get();
+
+        $otherExamMarks = $exam->is_final ? Mark::where('grade_id', $grade->id)
+            ->whereNot('exam_id', $exam->id)
+            ->where('year', $year)
+            ->with(['subject'])
+            ->get()
+            ->groupBy('exam_id') : [];
+
+        $gpaDetails = MarkGrading::all();
+
+        return response()->json([
+            'marks' => $marks,
+            'otherExamMarks' => $otherExamMarks,
+            'gpaDetails' => $gpaDetails,
+        ]);
     }
 }

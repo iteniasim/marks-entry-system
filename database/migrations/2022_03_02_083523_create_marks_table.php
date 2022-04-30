@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('full_marks');
             $table->integer('pass_marks');
             $table->integer('obtained_marks');
+            $table->year('year');
             $table->timestamps();
         });
     }
