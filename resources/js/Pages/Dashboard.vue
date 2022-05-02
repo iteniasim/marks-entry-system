@@ -7,6 +7,7 @@ import axios from 'axios'
 import { ref } from 'vue'
 import MarkSheetLayout from '@/Components/MarkSheetLayout.vue'
 import _ from 'lodash'
+import vPrint from 'vue3-print-nb'
 
 const props = defineProps({
     grades: Object,
@@ -150,6 +151,8 @@ const searchStudentResults = () => {
         markList.value = res.data.marks
         otherMarkList.value = res.data.otherExamMarks
         gpaDetails.value = res.data.gpaDetails
+    }).then(() => {
+        document.getElementById('print-all-button').click()
     })
 }
 
@@ -374,21 +377,29 @@ const printSummary = () => {
                                     />
                                 </div>
 
+                                <!-- MarkSheet List -->
                                 <div v-if="markList">
-                                    <div
-                                        v-for="(studentMarkList, studentId) in _.groupBy(markList, (mark) => mark.student_id)"
-                                        :key="`student-${studentId}-marksheet-wrapper`"
-                                    >
-                                        <MarkSheetLayout
-                                            :print-id="`marksheet-print-student-${studentId}`"
-                                            :student="studentMarkList[0]['student']"
-                                            :grade="grades.find((grade)=>grade.id == studentMarkList[0].grade_id)"
-                                            :exam="exams.find((exam)=>exam.id == studentMarkList[0].exam_id)"
-                                            :marks="studentMarkList"
-                                            :exams="props.exams"
-                                            :average-gpa="gpaDetails.find(gpaDetail=>gpaDetail.lower_mark_limit <= _.meanBy(studentMarkList, 'obtained_marks') && gpaDetail.upper_mark_limit >= _.meanBy(studentMarkList, 'obtained_marks'))"
-                                            :other-exam-marks="_.groupBy(otherMarkList.filter(studentOtherMark=>studentOtherMark.student_id == studentId && studentOtherMark.grade_id == studentMarkList[0].grade_id), 'exam_id')"
-                                        />
+                                    <div class="flex justify-end">
+                                        <t-button id="print-all-button" v-print="{ id: 'all-mark-sheet-wrapper', popTitle: 'MarkSheet' }">
+                                            Print All
+                                        </t-button>
+                                    </div>
+                                    <div id="all-mark-sheet-wrapper">
+                                        <div
+                                            v-for="(studentMarkList, studentId) in _.groupBy(markList, (mark) => mark.student_id)"
+                                            :key="`student-${studentId}-marksheet-wrapper`"
+                                        >
+                                            <MarkSheetLayout
+                                                :print-id="`marksheet-print-student-${studentId}`"
+                                                :student="studentMarkList[0]['student']"
+                                                :grade="grades.find((grade)=>grade.id == studentMarkList[0].grade_id)"
+                                                :exam="exams.find((exam)=>exam.id == studentMarkList[0].exam_id)"
+                                                :marks="studentMarkList"
+                                                :exams="props.exams"
+                                                :average-gpa="gpaDetails.find(gpaDetail=>gpaDetail.lower_mark_limit <= _.meanBy(studentMarkList, 'obtained_marks') && gpaDetail.upper_mark_limit >= _.meanBy(studentMarkList, 'obtained_marks'))"
+                                                :other-exam-marks="_.groupBy(otherMarkList.filter(studentOtherMark=>studentOtherMark.student_id == studentId && studentOtherMark.grade_id == studentMarkList[0].grade_id), 'exam_id')"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

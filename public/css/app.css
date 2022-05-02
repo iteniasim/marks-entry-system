@@ -35930,6 +35930,12 @@ select {
     color: rgb(156 163 175 / var(--tw-text-opacity));
   }
 }
+@media print {
+
+  .print\:hidden {
+    display: none;
+  }
+}
 @media (min-width: 640px) {
 
   .sm\:-mx-6 {

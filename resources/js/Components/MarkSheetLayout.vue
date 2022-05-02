@@ -1,6 +1,7 @@
 <script setup>
 import { TButton } from '@variantjs/vue'
 import vPrint from 'vue3-print-nb'
+import _ from 'lodash'
 
 const props = defineProps({
     student: Object,
@@ -25,14 +26,14 @@ const finalMarkForSubject = (subject) => {
             subjectMarks = subjectMarks + props.otherExamMarks[exam.id].find(mark => mark.subject_id == subject.id).obtained_marks * props.exams.find(examItem => examItem.id == exam.id).final_evaluation_percentage / 100
         }
     })
-    return subjectMarks
+    return _.round(subjectMarks, 2)
 }
 </script>
 
 <template>
     <div>
-        <div :id="props.printId" class="flex flex-col gap-4">
-            <div class="px-10 py-10" style="page-break-after: always;">
+        <div :id="props.printId" class="flex flex-col gap-4" style="page-break-after: always;">
+            <div class="px-10 py-10">
                 <div>
                     <div>
                         <div class="text-3xl font-black text-center">
@@ -147,8 +148,10 @@ const finalMarkForSubject = (subject) => {
                 </div>
             </div>
         </div>
-        <t-button v-print="{ id: props.printId, popTitle: 'title' }">
-            Print
-        </t-button>
+        <div class="flex justify-end">
+            <t-button class="print:hidden" v-print="{ id: props.printId, popTitle: 'MarkSheet' }">
+                Print
+            </t-button>
+        </div>
     </div>
 </template>
