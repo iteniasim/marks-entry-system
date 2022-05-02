@@ -16,13 +16,28 @@ const studentSearch = ref({
     grade: null,
 })
 
+const years = [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026,
+    2027,
+    2028,
+    2029,
+    2030,
+]
+
 const printResult = ref({
-    name: null,
     grade_id: null,
+    exam_id: null,
+    year: null,
 })
+
 const studentSummary = ref({
-    name: null,
     grade_id: null,
+    exam_id: null,
+    year: null,
 })
 
 const markForm = useForm({
@@ -47,19 +62,32 @@ const openMarksEntryModal = (studentId, examId) => {
     let selectedExam = props.exams.find(exam => exam.id === examId)
 
     if (!subjectsOfGrade.value.filter(subject => subject.grade_id === selectedStudent.grade.id).length) {
-        fetchSubjectsOfGrade(selectedStudent.grade.id)
-    }
-    if (selectedStudent.marks.filter(mark => mark.exam_id === examId && mark.grade_id === markForm.grade_id).length) {
-        let marksForSelectedExam = selectedStudent.marks.filter(mark => mark.exam_id === examId && mark.grade_id === markForm.grade_id)
-        markForm.subject_ids.forEach(subjectId => {
-            markForm.obtained_marks[subjectId] = marksForSelectedExam.find(mark => mark.subject_id === subjectId).obtained_marks
-        })
-    }
+        fetchSubjectsOfGrade(selectedStudent.grade.id).then(() => {
+            if (selectedStudent.marks.filter(mark => mark.exam_id === examId && mark.grade_id === markForm.grade_id).length) {
+                let marksForSelectedExam = selectedStudent.marks.filter(mark => mark.exam_id === examId && mark.grade_id === markForm.grade_id)
+                markForm.subject_ids.forEach(subjectId => {
+                    markForm.obtained_marks[subjectId] = marksForSelectedExam.find(mark => mark.subject_id === subjectId).obtained_marks
+                })
+            }
 
-    markForm.student_id = selectedStudent.id
-    markForm.exam_id = selectedExam.id
-    modalDetails.value.show = true
-    modalDetails.value.title = `${selectedStudent.name} (Student) marks for ${selectedExam.name} (Exam)`
+            markForm.student_id = selectedStudent.id
+            markForm.exam_id = selectedExam.id
+            modalDetails.value.show = true
+            modalDetails.value.title = `${selectedStudent.name} (Student) marks for ${selectedExam.name} (Exam)`
+        })
+    } else {
+        if (selectedStudent.marks.filter(mark => mark.exam_id === examId && mark.grade_id === markForm.grade_id).length) {
+            let marksForSelectedExam = selectedStudent.marks.filter(mark => mark.exam_id === examId && mark.grade_id === markForm.grade_id)
+            markForm.subject_ids.forEach(subjectId => {
+                markForm.obtained_marks[subjectId] = marksForSelectedExam.find(mark => mark.subject_id === subjectId).obtained_marks
+            })
+        }
+
+        markForm.student_id = selectedStudent.id
+        markForm.exam_id = selectedExam.id
+        modalDetails.value.show = true
+        modalDetails.value.title = `${selectedStudent.name} (Student) marks for ${selectedExam.name} (Exam)`
+    }
 }
 
 const fetchSubjectsOfGrade = (gradeId) => axios.get(route('gradeData', gradeId)).then(res => {
@@ -104,9 +132,10 @@ const searchStudent = () => {
 }
 
 const searchStudentResults = () => {
-    // axios.get(route('students.index', { search: studentSearch.value.search, grade: studentSearch.value.grade })).then((res) => {
-    //     console.log(res.data)
-    // })
+    axios.get(route('year.exam.grade.marks', { year: printResult.value.year, exam: printResult.value.exam_id, grade: printResult.value.grade_id })).then((res) => {
+        studentList.value = null
+        console.log(res.data)
+    })
 }
 
 const printSummary = () => {
@@ -160,8 +189,8 @@ const printSummary = () => {
                                     <div class="text-lg font-semibold">
                                         Print Results
                                     </div>
-                                    <form @submit.prevent="searchStudentResults" method="get">
-                                        <div class="flex justify-around gap-2">
+                                    <form @submit.prevent="searchStudentResults" method="get" class="grid grid-rows-3">
+                                        <div class="grid grid-cols-2 gap-2">
                                             <div class="items-center justify-center">
                                                 <label class="label">
                                                     <span class="label-text">Class</span>
@@ -177,20 +206,19 @@ const printSummary = () => {
                                                     <span class="label-text">Term</span>
                                                 </label>
                                                 <t-rich-select
-                                                    :options="props.grades" v-model="printResult.exam_id"
-                                                    name="exam_id" placeholder="Select Grade" value-attribute="id"
+                                                    :options="props.exams" v-model="printResult.exam_id"
+                                                    name="exam_id" placeholder="Select Exam" value-attribute="id"
                                                     text-attribute="name"
                                                 />
                                             </div>
                                         </div>
-                                        <div class="px-4">
+                                        <div>
                                             <label class="label">
                                                 <span class="label-text">Year</span>
                                             </label>
                                             <t-rich-select
-                                                :options="props.grades" v-model="printResult.year"
-                                                name="year" placeholder="Select Grade" value-attribute="id"
-                                                text-attribute="name"
+                                                :options="years" v-model="printResult.year"
+                                                name="year" placeholder="Select Grade"
                                             />
                                         </div>
                                         <div class="flex items-center justify-end">
@@ -206,7 +234,7 @@ const printSummary = () => {
                                         Print Summary
                                     </div>
                                     <form @submit.prevent="printSummary" method="get">
-                                        <div class="flex justify-around gap-2">
+                                        <div class="grid grid-cols-2 gap-2">
                                             <div class="items-center justify-center">
                                                 <label class="label">
                                                     <span class="label-text">Class</span>
@@ -222,13 +250,13 @@ const printSummary = () => {
                                                     <span class="label-text">Term</span>
                                                 </label>
                                                 <t-rich-select
-                                                    :options="props.grades" v-model="studentSummary.exam_id"
-                                                    name="exam_id" placeholder="Select Grade" value-attribute="id"
+                                                    :options="props.exams" v-model="studentSummary.exam_id"
+                                                    name="exam_id" placeholder="Select Exam" value-attribute="id"
                                                     text-attribute="name"
                                                 />
                                             </div>
                                         </div>
-                                        <div class="px-4">
+                                        <div>
                                             <label class="label">
                                                 <span class="label-text">Year</span>
                                             </label>
