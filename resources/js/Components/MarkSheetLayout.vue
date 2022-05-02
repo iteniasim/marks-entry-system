@@ -10,6 +10,10 @@ const props = defineProps({
     exams: Object,
     averageGpa: Object,
     otherExamMarks: Object,
+    printId: {
+        type: String,
+        default: 'printMe',
+    },
 })
 
 const finalMarkForSubject = (subject) => {
@@ -27,7 +31,7 @@ const finalMarkForSubject = (subject) => {
 
 <template>
     <div>
-        <div id="printMe" class="flex flex-col gap-4">
+        <div :id="props.printId" class="flex flex-col gap-4">
             <div class="px-10 py-10" style="page-break-after: always;">
                 <div>
                     <div>
@@ -143,7 +147,7 @@ const finalMarkForSubject = (subject) => {
                 </div>
             </div>
         </div>
-        <t-button v-print="{id:'printMe', popTitle:'title'}">
+        <t-button v-print="{ id: props.printId, popTitle: 'title' }">
             Print
         </t-button>
     </div>

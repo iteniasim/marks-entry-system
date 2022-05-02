@@ -142,15 +142,14 @@ class MarkController extends Controller
         $marks = Mark::where('grade_id', $grade->id)
             ->where('exam_id', $exam->id)
             ->where('year', $year)
-            ->with(['subject'])
+            ->with(['subject', 'student'])
             ->get();
 
         $otherExamMarks = $exam->is_final ? Mark::where('grade_id', $grade->id)
             ->whereNot('exam_id', $exam->id)
             ->where('year', $year)
             ->with(['subject'])
-            ->get()
-            ->groupBy('exam_id') : [];
+            ->get() : [];
 
         $gpaDetails = MarkGrading::all();
 

@@ -5,6 +5,8 @@ import { TInput, TButton, TRichSelect, TModal } from '@variantjs/vue'
 import PaginationComponent from '@/Components/PaginationComponent.vue'
 import axios from 'axios'
 import { ref } from 'vue'
+import MarkSheetLayout from '@/Components/MarkSheetLayout.vue'
+import _ from 'lodash'
 
 const props = defineProps({
     grades: Object,
@@ -54,6 +56,12 @@ const modalDetails = ref({
 })
 
 const studentList = ref(null)
+
+const markList = ref(null)
+
+const otherMarkList = ref(null)
+
+const gpaDetails = ref(null)
 
 const subjectsOfGrade = ref([])
 
@@ -126,6 +134,10 @@ const saveMarks = () => {
 
 const searchStudent = () => {
     axios.get(route('students.index', { search: studentSearch.value.search, grade: studentSearch.value.grade, withMarks: true })).then((res) => {
+        markList.value = null
+        otherMarkList.value = null
+        gpaDetails.value = null
+
         studentList.value = res.data.students
         subjectsOfGrade.value = res.data.gradeSubjects
     })
@@ -134,7 +146,10 @@ const searchStudent = () => {
 const searchStudentResults = () => {
     axios.get(route('year.exam.grade.marks', { year: printResult.value.year, exam: printResult.value.exam_id, grade: printResult.value.grade_id })).then((res) => {
         studentList.value = null
-        console.log(res.data)
+
+        markList.value = res.data.marks
+        otherMarkList.value = res.data.otherExamMarks
+        gpaDetails.value = res.data.gpaDetails
     })
 }
 
@@ -357,6 +372,24 @@ const printSummary = () => {
                                         :params="[{ name: 'withMarks', value: true }]"
                                         @update:page-data="updatePageData"
                                     />
+                                </div>
+
+                                <div v-if="markList">
+                                    <div
+                                        v-for="(studentMarkList, studentId) in _.groupBy(markList, (mark) => mark.student_id)"
+                                        :key="`student-${studentId}-marksheet-wrapper`"
+                                    >
+                                        <MarkSheetLayout
+                                            :print-id="`marksheet-print-student-${studentId}`"
+                                            :student="studentMarkList[0]['student']"
+                                            :grade="grades.find((grade)=>grade.id == studentMarkList[0].grade_id)"
+                                            :exam="exams.find((exam)=>exam.id == studentMarkList[0].exam_id)"
+                                            :marks="studentMarkList"
+                                            :exams="props.exams"
+                                            :average-gpa="gpaDetails.find(gpaDetail=>gpaDetail.lower_mark_limit <= _.meanBy(studentMarkList, 'obtained_marks') && gpaDetail.upper_mark_limit >= _.meanBy(studentMarkList, 'obtained_marks'))"
+                                            :other-exam-marks="_.groupBy(otherMarkList.filter(studentOtherMark=>studentOtherMark.student_id == studentId && studentOtherMark.grade_id == studentMarkList[0].grade_id), 'exam_id')"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
