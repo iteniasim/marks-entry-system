@@ -37,12 +37,6 @@ const printResult = ref({
     year: null,
 })
 
-const studentSummary = ref({
-    grade_id: null,
-    exam_id: null,
-    year: null,
-})
-
 const markForm = useForm({
     student_id: null,
     exam_id: null,
@@ -145,23 +139,30 @@ const searchStudent = () => {
 }
 
 const searchStudentResults = () => {
-    axios.get(route('year.exam.grade.marks', { year: printResult.value.year, exam: printResult.value.exam_id, grade: printResult.value.grade_id })).then((res) => {
+    return axios.get(route('year.exam.grade.marks', { year: printResult.value.year, exam: printResult.value.exam_id, grade: printResult.value.grade_id })).then((res) => {
         studentList.value = null
 
         markList.value = res.data.marks
         otherMarkList.value = res.data.otherExamMarks
         gpaDetails.value = res.data.gpaDetails
-    }).then(() => {
+    })
+}
+
+const searchResults = () => {
+    searchStudentResults()
+}
+
+const printAllResults = () => {
+    searchStudentResults().then(() => {
         document.getElementById('print-all-button').click()
     })
 }
 
-const printSummary = () => {
-    // axios.get(route('students.index', { search: studentSearch.value.search, grade: studentSearch.value.grade })).then((res) => {
-    //     console.log(res.data)
-    // })
+const printResultSummary = () => {
+    searchStudentResults().then(() => {
+        document.getElementById('print-summary-button').click()
+    })
 }
-
 </script>
 
 <template>
@@ -239,54 +240,15 @@ const printSummary = () => {
                                                 name="year" placeholder="Select Grade"
                                             />
                                         </div>
-                                        <div class="flex items-center justify-end">
-                                            <t-button class="mt-8">
-                                                Print
+                                        <div class="flex items-center justify-end gap-4">
+                                            <t-button @click.prevent="searchResults" class="mt-8">
+                                                Search
                                             </t-button>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <div class="p-2 my-4 border">
-                                    <div class="text-lg font-semibold">
-                                        Print Summary
-                                    </div>
-                                    <form @submit.prevent="printSummary" method="get">
-                                        <div class="grid grid-cols-2 gap-2">
-                                            <div class="items-center justify-center">
-                                                <label class="label">
-                                                    <span class="label-text">Class</span>
-                                                </label>
-                                                <t-rich-select
-                                                    :options="props.grades" v-model="studentSummary.grade_id"
-                                                    name="grade_id" placeholder="Select Grade" value-attribute="id"
-                                                    text-attribute="name"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label class="label">
-                                                    <span class="label-text">Term</span>
-                                                </label>
-                                                <t-rich-select
-                                                    :options="props.exams" v-model="studentSummary.exam_id"
-                                                    name="exam_id" placeholder="Select Exam" value-attribute="id"
-                                                    text-attribute="name"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="label">
-                                                <span class="label-text">Year</span>
-                                            </label>
-                                            <t-rich-select
-                                                :options="props.grades" v-model="studentSummary.year"
-                                                name="year" placeholder="Select Grade" value-attribute="id"
-                                                text-attribute="name"
-                                            />
-                                        </div>
-                                        <div class="flex items-center justify-end">
-                                            <t-button class="mt-8">
-                                                Print
+                                            <t-button @click.prevent="printAllResults" class="mt-8">
+                                                Print All
+                                            </t-button>
+                                            <t-button @click.prevent="printResultSummary" class="mt-8">
+                                                Print Summary
                                             </t-button>
                                         </div>
                                     </form>
@@ -379,27 +341,40 @@ const printSummary = () => {
 
                                 <!-- MarkSheet List -->
                                 <div v-if="markList">
-                                    <div class="flex justify-end">
-                                        <t-button id="print-all-button" v-print="{ id: 'all-mark-sheet-wrapper', popTitle: 'MarkSheet' }">
-                                            Print All
-                                        </t-button>
-                                    </div>
-                                    <div id="all-mark-sheet-wrapper">
-                                        <div
-                                            v-for="(studentMarkList, studentId) in _.groupBy(markList, (mark) => mark.student_id)"
-                                            :key="`student-${studentId}-marksheet-wrapper`"
-                                        >
-                                            <MarkSheetLayout
-                                                :print-id="`marksheet-print-student-${studentId}`"
-                                                :student="studentMarkList[0]['student']"
-                                                :grade="grades.find((grade)=>grade.id == studentMarkList[0].grade_id)"
-                                                :exam="exams.find((exam)=>exam.id == studentMarkList[0].exam_id)"
-                                                :marks="studentMarkList"
-                                                :exams="props.exams"
-                                                :average-gpa="gpaDetails.find(gpaDetail=>gpaDetail.lower_mark_limit <= _.meanBy(studentMarkList, 'obtained_marks') && gpaDetail.upper_mark_limit >= _.meanBy(studentMarkList, 'obtained_marks'))"
-                                                :other-exam-marks="_.groupBy(otherMarkList.filter(studentOtherMark=>studentOtherMark.student_id == studentId && studentOtherMark.grade_id == studentMarkList[0].grade_id), 'exam_id')"
-                                            />
+                                    <div>
+                                        <div class="flex justify-end">
+                                            <t-button id="print-all-button" v-print="{ id: 'all-mark-sheet-wrapper', popTitle: 'MarkSheet' }">
+                                                Print All
+                                            </t-button>
+                                            <t-button id="print-summary-button" v-print="{ id: 'mark-sheet-summary-wrapper', popTitle: 'MarkSheet' }">
+                                                Print Summary
+                                            </t-button>
                                         </div>
+                                        <div id="all-mark-sheet-wrapper">
+                                            <div
+                                                v-for="(studentMarkList, studentId) in _.groupBy(markList, (mark) => mark.student_id)"
+                                                :key="`student-${studentId}-marksheet-wrapper`"
+                                            >
+                                                <MarkSheetLayout
+                                                    :print-id="`marksheet-print-student-${studentId}`"
+                                                    :student="studentMarkList[0]['student']"
+                                                    :grade="grades.find((grade)=>grade.id == studentMarkList[0].grade_id)"
+                                                    :exam="exams.find((exam)=>exam.id == studentMarkList[0].exam_id)"
+                                                    :marks="studentMarkList"
+                                                    :exams="props.exams"
+                                                    :average-gpa="gpaDetails.find(gpaDetail=>gpaDetail.lower_mark_limit <= _.meanBy(studentMarkList, 'obtained_marks') && gpaDetail.upper_mark_limit >= _.meanBy(studentMarkList, 'obtained_marks'))"
+                                                    :other-exam-marks="_.groupBy(otherMarkList.filter(studentOtherMark=>studentOtherMark.student_id == studentId && studentOtherMark.grade_id == studentMarkList[0].grade_id), 'exam_id')"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <br />
+                                    <hr />
+                                    <br />
+
+                                    <div>
+                                        Marks Summary
                                     </div>
                                 </div>
                             </div>
