@@ -13,7 +13,7 @@ const props = defineProps({
     otherExamMarks: Object,
     printId: {
         type: String,
-        default: 'printMe',
+        default: 'print-mark-sheet',
     },
 })
 

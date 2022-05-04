@@ -8,6 +8,7 @@ import { ref } from 'vue'
 import MarkSheetLayout from '@/Components/MarkSheetLayout.vue'
 import _ from 'lodash'
 import vPrint from 'vue3-print-nb'
+import MarksSummaryLayout from '../Components/MarksSummaryLayout.vue'
 
 const props = defineProps({
     grades: Object,
@@ -175,6 +176,7 @@ const printResultSummary = () => {
                     <div class="p-6 bg-white border-b border-gray-200">
                         <div class="grid w-full h-screen grid-cols-3 p-4 overflow-auto divide-x-4">
                             <div class="pr-4">
+                                <!-- student search box -->
                                 <div class="p-2 my-4 border">
                                     <div class="text-lg font-semibold">
                                         Student Search
@@ -204,6 +206,7 @@ const printResultSummary = () => {
                                     </form>
                                 </div>
 
+                                <!-- result search box -->
                                 <div class="p-2 my-4 border">
                                     <div class="text-lg font-semibold">
                                         Print Results
@@ -342,11 +345,11 @@ const printResultSummary = () => {
                                 <!-- MarkSheet List -->
                                 <div v-if="markList">
                                     <div>
-                                        <div class="flex justify-end">
+                                        <div class="flex justify-end gap-4">
                                             <t-button id="print-all-button" v-print="{ id: 'all-mark-sheet-wrapper', popTitle: 'MarkSheet' }">
                                                 Print All
                                             </t-button>
-                                            <t-button id="print-summary-button" v-print="{ id: 'mark-sheet-summary-wrapper', popTitle: 'MarkSheet' }">
+                                            <t-button id="print-summary-button" v-print="{ id: 'mark-summary-print', popTitle: 'MarkSheet' }">
                                                 Print Summary
                                             </t-button>
                                         </div>
@@ -374,7 +377,14 @@ const printResultSummary = () => {
                                     <br />
 
                                     <div>
-                                        Marks Summary
+                                        <MarksSummaryLayout
+                                            :print-id="`mark-summary-print`"
+                                            :grade="grades.find((grade)=>grade.id == printResult.grade_id)"
+                                            :exam="exams.find((exam)=>exam.id == printResult.exam_id)"
+                                            :subjects="_.uniqBy(markList.map(eachMark=>{ return eachMark.subject }), 'id')"
+                                            :marks="markList"
+                                            :gpa-details="gpaDetails"
+                                        />
                                     </div>
                                 </div>
                             </div>
