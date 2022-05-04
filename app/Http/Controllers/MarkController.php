@@ -130,11 +130,9 @@ class MarkController extends Controller
             ->get()
             ->groupBy('exam_id') : [];
 
-        $averageGpa = MarkGrading::where('lower_mark_limit', '<=', $marks->avg('obtained_marks'))
-            ->where('upper_mark_limit', '>=', $marks->avg('obtained_marks'))
-            ->first();
+        $gpaDetails = MarkGrading::all();
 
-        return inertia('Marks/Show', compact('student', 'grade', 'exam', 'marks', 'exams', 'averageGpa', 'otherExamMarks'));
+        return inertia('Marks/Show', compact('student', 'grade', 'exam', 'marks', 'exams', 'gpaDetails', 'otherExamMarks'));
     }
 
     public function studentMarksForYearExamGrade($year, Exam $exam, Grade $grade)

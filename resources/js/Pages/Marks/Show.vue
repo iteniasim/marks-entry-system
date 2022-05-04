@@ -11,7 +11,7 @@ const props = defineProps({
     exam: Object,
     marks: Object,
     exams: Object,
-    averageGpa: Object,
+    gpaDetails: Object,
     otherExamMarks: Object,
 })
 </script>
@@ -33,7 +33,7 @@ const props = defineProps({
                         :exam="props.exam"
                         :marks="props.marks"
                         :exams="props.exams"
-                        :average-gpa="props.averageGpa"
+                        :gpa-details="props.gpaDetails"
                         :other-exam-marks="props.otherExamMarks"
                     />
                 </div>

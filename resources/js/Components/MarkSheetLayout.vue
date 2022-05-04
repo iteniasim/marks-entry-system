@@ -9,7 +9,7 @@ const props = defineProps({
     exam: Object,
     marks: Object,
     exams: Object,
-    averageGpa: Object,
+    gpaDetails: Object,
     otherExamMarks: Object,
     printId: {
         type: String,
@@ -27,6 +27,10 @@ const finalMarkForSubject = (subject) => {
         }
     })
     return _.round(subjectMarks, 2)
+}
+
+const averageGpa = (studentMarkList) => {
+    return props.gpaDetails.find(gpaDetail => gpaDetail.lower_mark_limit <= _.meanBy(studentMarkList, 'obtained_marks') && gpaDetail.upper_mark_limit >= _.meanBy(studentMarkList, 'obtained_marks'))
 }
 </script>
 
@@ -113,7 +117,7 @@ const finalMarkForSubject = (subject) => {
 
                     <div class="flex justify-between mt-10">
                         <div>
-                            Grade Point Average: <span class="font-semibold underline">&nbsp;&nbsp;{{ props.averageGpa.gpa }}&nbsp;&nbsp;</span>
+                            Grade Point Average: <span class="font-semibold underline">&nbsp;&nbsp;{{ averageGpa(props.marks).gpa }}&nbsp;&nbsp;</span>
                         </div>
                         <div>
                             Attendance: _________
@@ -122,7 +126,7 @@ const finalMarkForSubject = (subject) => {
 
                     <div class="mt-4">
                         <div>
-                            Comments: <span class="font-semibold underline">&nbsp;&nbsp;{{ props.averageGpa.description }}&nbsp;&nbsp;</span>
+                            Comments: <span class="font-semibold underline">&nbsp;&nbsp;{{ averageGpa(props.marks).description }}&nbsp;&nbsp;</span>
                         </div>
                     </div>
                 </div>

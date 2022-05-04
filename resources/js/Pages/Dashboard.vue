@@ -365,7 +365,7 @@ const printResultSummary = () => {
                                                     :exam="exams.find((exam)=>exam.id == studentMarkList[0].exam_id)"
                                                     :marks="studentMarkList"
                                                     :exams="props.exams"
-                                                    :average-gpa="gpaDetails.find(gpaDetail=>gpaDetail.lower_mark_limit <= _.meanBy(studentMarkList, 'obtained_marks') && gpaDetail.upper_mark_limit >= _.meanBy(studentMarkList, 'obtained_marks'))"
+                                                    :gpa-details="gpaDetails"
                                                     :other-exam-marks="_.groupBy(otherMarkList.filter(studentOtherMark=>studentOtherMark.student_id == studentId && studentOtherMark.grade_id == studentMarkList[0].grade_id), 'exam_id')"
                                                 />
                                             </div>
