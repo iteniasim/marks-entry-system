@@ -73,7 +73,7 @@ const averageGpa = (studentMarkList) => {
                                     <th v-for="(examTitle, index) in props.exams" :key="`exam-title-${index}`" class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">
                                         {{ examTitle.name }} <span>({{ examTitle.final_evaluation_percentage }}%)</span>
                                     </th>
-                                    <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Final</th>
+                                    <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Final Result</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-100">
@@ -90,11 +90,11 @@ const averageGpa = (studentMarkList) => {
                                         </td>
                                         <td v-for="(examMarks, examMarkIndex) in props.exams" :key="`exam-marks-${examMarkIndex}`" class="px-3 py-2 whitespace-no-wrap">
                                             <div v-if="mark.exam_id === examMarks.id">
-                                                {{ mark.obtained_marks }}
+                                                {{ mark.obtained_marks }} ({{ mark.mark_grade.grade }})
                                             </div>
                                             <div v-else>
                                                 <div v-if="Object.keys(otherExamMarks).length && otherExamMarks.hasOwnProperty(examMarks.id)">
-                                                    {{ props.otherExamMarks[examMarks.id].find(otherExamMark=>otherExamMark.subject_id === mark.subject_id).obtained_marks }}
+                                                    {{ props.otherExamMarks[examMarks.id].find(otherExamMark=>otherExamMark.subject_id === mark.subject_id).obtained_marks }} ({{ props.otherExamMarks[examMarks.id].find(otherExamMark=>otherExamMark.subject_id === mark.subject_id).mark_grade.grade }})
                                                 </div>
                                                 <div v-else>
                                                     --
@@ -103,7 +103,7 @@ const averageGpa = (studentMarkList) => {
                                         </td>
                                         <td class="px-3 py-2 whitespace-no-wrap">
                                             <div v-if="props.exam.is_final">
-                                                {{ finalMarkForSubject(mark.subject) }}
+                                                {{ finalMarkForSubject(mark.subject) }} ({{ averageGpa([mark]).grade }})
                                             </div>
                                             <div v-else>
                                                 --

@@ -174,7 +174,7 @@ const printResultSummary = () => {
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <div class="grid w-full h-screen grid-cols-3 p-4 overflow-auto divide-x-4">
+                        <div class="grid w-full h-screen grid-cols-4 p-4 overflow-auto divide-x-4">
                             <div class="pr-4">
                                 <!-- student search box -->
                                 <div class="p-2 my-4 border">
@@ -211,8 +211,8 @@ const printResultSummary = () => {
                                     <div class="text-lg font-semibold">
                                         Print Results
                                     </div>
-                                    <form @submit.prevent="searchStudentResults" method="get" class="grid grid-rows-3">
-                                        <div class="grid grid-cols-2 gap-2">
+                                    <form @submit.prevent="searchStudentResults" method="get" class="grid grid-rows-5">
+                                        <div>
                                             <div class="items-center justify-center">
                                                 <label class="label">
                                                     <span class="label-text">Class</span>
@@ -223,6 +223,8 @@ const printResultSummary = () => {
                                                     text-attribute="name"
                                                 />
                                             </div>
+                                        </div>
+                                        <div>
                                             <div>
                                                 <label class="label">
                                                     <span class="label-text">Term</span>
@@ -247,6 +249,8 @@ const printResultSummary = () => {
                                             <t-button @click.prevent="searchResults" class="mt-8">
                                                 Search
                                             </t-button>
+                                        </div>
+                                        <div class="flex items-center justify-between">
                                             <t-button @click.prevent="printAllResults" class="mt-8">
                                                 Print All
                                             </t-button>
@@ -258,7 +262,7 @@ const printResultSummary = () => {
                                 </div>
                             </div>
 
-                            <div class="col-span-2 pl-4">
+                            <div class="col-span-3 pl-4">
                                 <!-- Student List -->
                                 <div v-if="studentList">
                                     <table class="min-w-full border border-gray-200 divide-y divide-gray-100 shadow-sm">
