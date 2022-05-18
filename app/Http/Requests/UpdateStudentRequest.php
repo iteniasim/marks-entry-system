@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateStudentRequest extends FormRequest
 {
@@ -25,7 +26,12 @@ class UpdateStudentRequest extends FormRequest
     {
         return [
             'name' => 'required|unique:students,name,' . $this->student->id,
-            'roll_no' => 'required|unique:students,roll_no,' . $this->student->id,
+            'roll_no' => [
+                'required',
+                Rule::unique('students', 'roll_no')->where(function ($query) {
+                    return $query->where('grade_id', $this->grade_id);
+                })->ignore($this->grade_id),
+            ],
             'grade_id' => 'required|exists:grades,id',
         ];
     }
