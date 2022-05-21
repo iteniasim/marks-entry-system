@@ -24,7 +24,7 @@ class UpdateGradeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:grades,name,' . $this->grade->id,
+            'name' => 'required' . $this->grade->id,
         ];
     }
 }
