@@ -25,6 +25,7 @@ class UpdateExamRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:3',
+            'finalEvaluationPercentage' => 'required|min:0|max:100',
         ];
     }
 }

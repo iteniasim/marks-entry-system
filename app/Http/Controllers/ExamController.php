@@ -58,7 +58,11 @@ class ExamController extends Controller
             ]);
         }
 
-        Exam::create($request->validated());
+        Exam::create([
+            'name' => $request->name,
+            'final_evaluation_percentage' => $request->finalEvaluationPercentage,
+            'is_final' => $request->has('isFinal') ? $request->isFinal : 0,
+        ]);
         return to_route('exams.index');
     }
 
@@ -103,7 +107,11 @@ class ExamController extends Controller
             ]);
         }
 
-        $exam->update($request->validated());
+        $exam->update([
+            'name' => $request->name,
+            'final_evaluation_percentage' => $request->finalEvaluationPercentage,
+            'is_final' => $request->has('isFinal') ? $request->isFinal : 0,
+        ]);
         return to_route('exams.index');
     }
 

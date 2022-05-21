@@ -11,6 +11,7 @@ const props = defineProps({
 
 const examForm = useForm({
     name: props.exam.name,
+    finalEvaluationPercentage: props.exam.final_evaluation_percentage,
     isFinal: props.exam.is_final ? true : false,
 })
 </script>
@@ -30,20 +31,34 @@ const examForm = useForm({
                         <form @submit.prevent="examForm.put(route('exams.update', props.exam.id))">
                             <div>
                                 <div>
-                                    <label class="label">
-                                        <span class="label-text">Name</span>
-                                    </label>
-                                    <TInput
-                                        name="name"
-                                        v-model="examForm.name"
-                                        placeholder="Name"
-                                    />
-
-                                    <div class="flex">
-                                        <label class="flex items-center ml-2">
-                                            <TCheckbox name="is_final" v-model="examForm.isFinal" />
-                                            <span class="ml-2 text-sm">Is Final Term</span>
+                                    <div>
+                                        <label class="label">
+                                            <span class="label-text">Name</span>
                                         </label>
+                                        <TInput
+                                            name="name"
+                                            v-model="examForm.name"
+                                            placeholder="Name"
+                                        />
+                                    </div>
+
+                                    <div class="grid grid-cols-2 mt-5">
+                                        <div class="flex flex-col justify-center">
+                                            <label class="label">
+                                                <span class="label-text">Final Evaluation Percentage</span>
+                                            </label>
+                                            <TInput
+                                                name="finalEvaluationPercentage"
+                                                v-model="examForm.finalEvaluationPercentage"
+                                                placeholder="Final Evaluation Percentage"
+                                            />
+                                        </div>
+                                        <div class="flex flex-col justify-center">
+                                            <label class="flex items-center ml-2">
+                                                <TCheckbox name="is_final" v-model="examForm.isFinal" />
+                                                <span class="ml-2 text-sm">Is Final Term</span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div
