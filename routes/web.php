@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\MarkController;
@@ -37,12 +38,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::resource('students', StudentController::class);
     Route::get('student/{student}/marksheets', [StudentController::class, 'studentMarksheets'])->name('students.studentMarksheets');
 
-    Route::get('/grade/{grade}/students', [GradeController::class, 'gradeData'])
-        ->name('gradeData');
-
     Route::resource('exams', ExamController::class);
 
     Route::resource('grades', GradeController::class);
+    Route::get('/grade/{grade}/students', [GradeController::class, 'gradeData'])
+        ->name('gradeData');
 
     Route::resource('subjects', SubjectController::class);
 
@@ -54,6 +54,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('upgrade/grade', [UpgradeController::class, 'upgradeStudentsOfGradeForm'])->name('form.upgradeStudentsOfGrade');
     Route::post('upgrade/grade', [UpgradeController::class, 'upgradeStudentsOfGrade'])->name('upgradeStudentsOfGrade');
+
+    Route::get('/attendance/summary', [AttendanceController::class, 'attendanceSummary'])->name('attendance.summary');
 });
 
 require __DIR__ . '/auth.php';

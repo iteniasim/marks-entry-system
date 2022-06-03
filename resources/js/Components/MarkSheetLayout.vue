@@ -2,6 +2,8 @@
 import { TButton } from '@variantjs/vue'
 import vPrint from 'vue3-print-nb'
 import _ from 'lodash'
+import { computed, onMounted, ref } from 'vue'
+import axios from 'axios'
 
 const props = defineProps({
     student: Object,
@@ -36,6 +38,23 @@ const finalMarkForSubject = (subject) => {
 const averageGpa = (studentMarkList) => {
     return props.gpaDetails.find(gpaDetail => gpaDetail.lower_mark_limit <= _.meanBy(studentMarkList, 'obtained_marks') && gpaDetail.upper_mark_limit >= _.meanBy(studentMarkList, 'obtained_marks'))
 }
+
+const studentAttendanceList = ref([])
+
+const fetchAttendanceSummary = async () => {
+    await axios.get(route('attendance.summary', { studentId: props.student.id, gradeId: props.grade.id, examId: props.exam.id }))
+        .then(res => {
+            studentAttendanceList.value = res.data.attendanceSummary
+        })
+}
+
+const studentAttendance = computed(() => {
+    return studentAttendanceList.value.find(record => record.student_id == props.student.id && record.grade_id == props.grade.id && record.exam_id == props.exam.id) ?? null
+})
+
+onMounted(async () => {
+    await fetchAttendanceSummary()
+})
 </script>
 
 <template>
@@ -124,7 +143,7 @@ const averageGpa = (studentMarkList) => {
                             Grade Point Average: <span class="font-semibold underline">&nbsp;&nbsp;{{ averageGpa(props.marks).gpa }}&nbsp;&nbsp;</span>
                         </div>
                         <div>
-                            Attendance: _________
+                            Attendance: <span class="font-semibold underline">&nbsp;&nbsp;{{ studentAttendance ? studentAttendance.present_days : 0 }}&nbsp;&nbsp;</span>
                         </div>
                     </div>
 
@@ -144,13 +163,13 @@ const averageGpa = (studentMarkList) => {
                             TH:
                         </div>
                         <div>
-                            ABS:
+                            ABS: <span class="font-semibold underline">&nbsp;&nbsp;{{ studentAttendance ? studentAttendance.absent_days : 0 }}&nbsp;&nbsp;</span>
                         </div>
                         <div>
                             PR:
                         </div>
                         <div>
-                            W:
+                            W: <span class="font-semibold underline">&nbsp;&nbsp;{{ studentAttendance ? studentAttendance.present_days + studentAttendance.absent_days : 0 }}&nbsp;&nbsp;</span>
                         </div>
                     </div>
                 </div>
