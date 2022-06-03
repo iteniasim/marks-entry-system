@@ -25,7 +25,7 @@ class StoreStudentRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:students,name',
+            'name' => 'required',
             'roll_no' => [
                 'required',
                 Rule::unique('students', 'roll_no')->where(function ($query) {

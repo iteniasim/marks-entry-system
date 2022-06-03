@@ -38,7 +38,7 @@ const studentForm = useForm({
                                     <div
                                         v-if="studentForm.errors.name"
                                     >
-                                        {{ form.errors.name }}
+                                        {{ studentForm.errors.name }}
                                     </div>
                                 </div>
                                 <div>
