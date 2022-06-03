@@ -29,6 +29,7 @@ class StudentController extends Controller
                 $query->with('marks');
             })
             ->orderBy('grade_id')
+            ->orderBy('roll_no')
             ->paginate(10);
 
         if ($request->expectsJson()) {
