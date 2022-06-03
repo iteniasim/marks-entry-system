@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Subject;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateMarkRequest extends FormRequest
@@ -23,12 +24,21 @@ class UpdateMarkRequest extends FormRequest
      */
     public function rules()
     {
+        $subjects = Subject::whereIn('id', $this->request->all()['subject_ids'])->get();
+        $obtainedMarks = $this->request->all()['obtained_marks'];
+
+        $obtainedMarksRules = [];
+        foreach ($obtainedMarks as $subjectId => $obtainedMark) {
+            $obtainedMarksRules['obtained_marks.' . $subjectId] = 'required|integer|min:0|max:' . $subjects->where('id', $subjectId)->first()->full_marks;
+        }
+
         return [
             'student_id' => 'required|exists:students,id',
             'subject_id' => 'required|exists:subjects,id',
             'exam_id' => 'required|exists:exams,id',
             'grade_id' => 'required|exists:grades,id',
-            'obtained_marks' => 'required|min:0|max:100',
+            'obtained_marks' => 'array',
+            ...$obtainedMarksRules,
         ];
     }
 
@@ -39,8 +49,15 @@ class UpdateMarkRequest extends FormRequest
      */
     public function attributes()
     {
+        $obtainedMarks = $this->request->all()['obtained_marks'];
+
+        $obtainedMarksAttributes = [];
+        foreach ($obtainedMarks as $subjectId => $obtainedMark) {
+            $obtainedMarksAttributes['obtained_marks.' . $subjectId] = 'obtained marks';
+        }
+
         return [
-            'obtained_marks.*' => 'obtained marks',
+            ...$obtainedMarksAttributes,
         ];
     }
 }
