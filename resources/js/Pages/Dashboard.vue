@@ -1,7 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head, Link, useForm } from '@inertiajs/inertia-vue3'
-import { TInput, TButton, TRichSelect, TModal } from '@variantjs/vue'
+import { TInput, TButton, TRichSelect, TModal, TToggle } from '@variantjs/vue'
 import PaginationComponent from '@/Components/PaginationComponent.vue'
 import axios from 'axios'
 import { ref } from 'vue'
@@ -60,6 +60,8 @@ const otherMarkList = ref(null)
 const gpaDetails = ref(null)
 
 const subjectsOfGrade = ref([])
+
+const gradeDisplay = ref(true)
 
 const openMarksEntryModal = (studentId, examId) => {
     let selectedStudent = studentList.value.data.find(student => student.id === studentId)
@@ -245,10 +247,18 @@ const printResultSummary = () => {
                                                 name="year" placeholder="Select Grade"
                                             />
                                         </div>
-                                        <div class="flex items-center justify-end gap-4">
-                                            <t-button @click.prevent="searchResults" class="mt-8">
+                                        <div class="flex items-center justify-between gap-4">
+                                            <t-button @click.prevent="searchResults">
                                                 Search
                                             </t-button>
+                                            <div class="grid grid-cols-12">
+                                                <div class="col-span-9 ml-4">
+                                                    {{ gradeDisplay ? "Show Grade" : "Show Marks" }}
+                                                </div>
+                                                <div class="col-span-3">
+                                                    <t-toggle v-model="gradeDisplay" />
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="flex items-center justify-between">
                                             <t-button @click.prevent="printAllResults" class="mt-8">
@@ -370,6 +380,7 @@ const printResultSummary = () => {
                                                     :marks="studentMarkList"
                                                     :exams="props.exams"
                                                     :gpa-details="gpaDetails"
+                                                    :grade-display="gradeDisplay"
                                                     :other-exam-marks="_.groupBy(otherMarkList.filter(studentOtherMark=>studentOtherMark.student_id == studentId && studentOtherMark.grade_id == studentMarkList[0].grade_id), 'exam_id')"
                                                 />
                                             </div>

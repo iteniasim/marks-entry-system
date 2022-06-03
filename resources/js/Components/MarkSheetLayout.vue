@@ -11,6 +11,10 @@ const props = defineProps({
     exams: Object,
     gpaDetails: Object,
     otherExamMarks: Object,
+    gradeDisplay: {
+        type: Boolean,
+        default: true,
+    },
     printId: {
         type: String,
         default: 'print-mark-sheet',
@@ -90,11 +94,11 @@ const averageGpa = (studentMarkList) => {
                                         </td>
                                         <td v-for="(examMarks, examMarkIndex) in props.exams" :key="`exam-marks-${examMarkIndex}`" class="px-3 py-2 whitespace-no-wrap">
                                             <div v-if="mark.exam_id === examMarks.id">
-                                                {{ mark.obtained_marks }} ({{ mark.mark_grade.grade }})
+                                                {{ props.gradeDisplay ? mark.mark_grade.grade : mark.obtained_marks }}
                                             </div>
                                             <div v-else>
                                                 <div v-if="Object.keys(otherExamMarks).length && otherExamMarks.hasOwnProperty(examMarks.id)">
-                                                    {{ props.otherExamMarks[examMarks.id].find(otherExamMark=>otherExamMark.subject_id === mark.subject_id).obtained_marks }} ({{ props.otherExamMarks[examMarks.id].find(otherExamMark=>otherExamMark.subject_id === mark.subject_id).mark_grade.grade }})
+                                                    {{ props.gradeDisplay ? props.otherExamMarks[examMarks.id].find(otherExamMark=>otherExamMark.subject_id === mark.subject_id).mark_grade.grade : props.otherExamMarks[examMarks.id].find(otherExamMark=>otherExamMark.subject_id === mark.subject_id).obtained_marks }}
                                                 </div>
                                                 <div v-else>
                                                     --
