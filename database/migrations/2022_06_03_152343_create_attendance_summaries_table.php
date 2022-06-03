@@ -22,7 +22,6 @@ return new class extends Migration
             $table->foreignIdFor(Grade::class);
             $table->foreignIdFor(Exam::class);
             $table->year('year');
-            $table->unsignedBigInteger('working_days');
             $table->unsignedBigInteger('absent_days');
             $table->unsignedBigInteger('present_days');
             $table->timestamps();
