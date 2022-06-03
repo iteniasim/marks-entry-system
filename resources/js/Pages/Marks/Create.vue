@@ -127,8 +127,8 @@ const saveMarks = () => {
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-100">
                                             <tr
-                                                v-for="(student, index) in studentsOfGrade"
-                                                :key="`student-${index}`"
+                                                v-for="(student, studentIndex) in studentsOfGrade"
+                                                :key="`student-${studentIndex}`"
                                             >
                                                 <td class="px-3 py-2 whitespace-no-wrap">
                                                     {{ student.name }}
@@ -167,23 +167,28 @@ const saveMarks = () => {
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-100">
-                    <tr
-                        v-for="(subject, index) in subjectsOfGrade"
-                        :key="`subject-${index}-student-${markForm.student_id}`"
+                    <template
+                        v-for="(subject, subjectIndex) in subjectsOfGrade"
+                        :key="`subject-${subjectIndex}-student-${markForm.student_id}`"
                     >
-                        <td class="px-3 py-2 whitespace-no-wrap">
-                            {{ subject.name }}
-                        </td>
-                        <td class="px-3 py-2 whitespace-no-wrap">
-                            {{ subject.full_marks }}
-                        </td>
-                        <td class="px-3 py-2 whitespace-no-wrap">
-                            {{ subject.pass_marks }}
-                        </td>
-                        <td class="px-3 py-2 whitespace-no-wrap">
-                            <t-input v-model="markForm.obtained_marks[subject.id]" />
-                        </td>
-                    </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-no-wrap">
+                                {{ subject.name }}
+                            </td>
+                            <td class="px-3 py-2 whitespace-no-wrap">
+                                {{ subject.full_marks }}
+                            </td>
+                            <td class="px-3 py-2 whitespace-no-wrap">
+                                {{ subject.pass_marks }}
+                            </td>
+                            <td class="px-3 py-2 whitespace-no-wrap">
+                                <t-input v-model="markForm.obtained_marks[subject.id]" />
+                            </td>
+                        </tr>
+                        <tr class="text-red-400" v-if="markForm.errors && markForm.errors[`obtained_marks.${subject.id}`]">
+                            <td colspan="3">{{ markForm.errors[`obtained_marks.${subject.id}`] }}</td>
+                        </tr>
+                    </template>
                 </tbody>
             </table>
             <template #footer>

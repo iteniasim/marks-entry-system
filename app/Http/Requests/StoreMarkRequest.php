@@ -31,4 +31,16 @@ class StoreMarkRequest extends FormRequest
             'obtained_marks.*' => 'required|integer|min:0|max:100',
         ];
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'obtained_marks.*' => 'obtained marks',
+        ];
+    }
 }
