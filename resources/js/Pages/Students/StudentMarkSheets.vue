@@ -58,6 +58,9 @@ const markForm = useForm({
     grade_id: null,
     subject_ids: [],
     obtained_marks: {},
+    working_days: 0,
+    absent_days: 0,
+    present_days: 0,
 })
 
 const modalDetails = ref({
@@ -211,6 +214,26 @@ const subjectsOfSelectedGrade = computed(() => relatedSubjects.value.filter(subj
                     </tr>
                 </tbody>
             </table>
+
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div class="grid items-center grid-cols-3">
+                    <div class="col-span-2">
+                        Absent:
+                    </div>
+                    <div>
+                        <t-input v-model="markForm.absent_days" />
+                    </div>
+                </div>
+                <div class="grid items-center grid-cols-3">
+                    <div class="col-span-2">
+                        Present:
+                    </div>
+                    <div>
+                        <t-input v-model="markForm.present_days" />
+                    </div>
+                </div>
+            </div>
+
             <template #footer>
                 <div class="flex justify-between">
                     <t-button @click="closeMarksEntryModal" type="button">

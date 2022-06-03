@@ -39,6 +39,8 @@ class UpdateMarkRequest extends FormRequest
             'grade_id' => 'required|exists:grades,id',
             'obtained_marks' => 'array',
             ...$obtainedMarksRules,
+            'absent_days',
+            'present_days',
         ];
     }
 

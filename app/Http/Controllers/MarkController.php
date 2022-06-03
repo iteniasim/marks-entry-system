@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMarkRequest;
 use App\Http\Requests\UpdateMarkRequest;
+use App\Models\AttendanceSummary;
 use App\Models\Exam;
 use App\Models\Grade;
 use App\Models\Mark;
@@ -14,11 +15,6 @@ use Carbon\Carbon;
 
 class MarkController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $students = Student::whereHas('marks')
@@ -30,11 +26,6 @@ class MarkController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $exams = Exam::all();
@@ -42,12 +33,6 @@ class MarkController extends Controller
         return inertia('Marks/Create', compact('grades', 'exams'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreMarkRequest  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreMarkRequest $request)
     {
         foreach ($request->obtained_marks as $subjectId => $obtainedMark) {
@@ -65,15 +50,12 @@ class MarkController extends Controller
                     'obtained_marks' => $obtainedMark,
                 ]);
         }
+
+        $this->saveAttendance($request);
+
         return back()->with('success', 'Marks Saved');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Mark  $mark
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Mark $mark)
     {
         $students = Student::all();
@@ -84,30 +66,21 @@ class MarkController extends Controller
         return inertia('Marks/Edit', compact('mark', 'students', 'subjects', 'exams', 'grades'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateMarkRequest  $request
-     * @param  \App\Models\Mark  $mark
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdateMarkRequest $request, Mark $mark)
     {
         $subject = Subject::whereId($request->subject_id)->first();
+
         $mark->update([
             ...$request->validated(),
             'full_marks' => $subject->full_marks,
             'pass_marks' => $subject->pass_marks,
         ]);
+
+        $this->saveAttendance($request);
+
         return to_route('marks.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Mark  $mark
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Mark $mark)
     {
         $mark->delete();
@@ -156,5 +129,19 @@ class MarkController extends Controller
             'otherExamMarks' => $otherExamMarks,
             'gpaDetails' => $gpaDetails,
         ]);
+    }
+
+    public function saveAttendance($request)
+    {
+        return AttendanceSummary::updateOrCreate([
+            'student_id' => $request->student_id,
+            'grade_id' => $request->grade_id,
+            'exam_id' => $request->exam_id,
+            'year' => Carbon::now()->format('Y'),
+        ],
+            [
+                'absent_days' => $request->absent_days ?? 0,
+                'present_days' => $request->present_days ?? 0,
+            ]);
     }
 }
