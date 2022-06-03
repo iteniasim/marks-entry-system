@@ -23,25 +23,25 @@ class SubjectController extends Controller
             ->when($request->has('grade'), function ($query) use ($request) {
                 return $query->where('grade_id', $request->grade);
             })
-            ->with(['grade' => function ($query) {
-                $query->orderBY('name');
-            }])
-            ->paginate(10);
+            ->with('grade')
+            ->get();
+        $subjectsGroupedByGradeName = $subjects->groupBy('grade.id');
+        $paginatedAndGroupedSubjectList = $subjectsGroupedByGradeName->simplePaginate(5);
 
         if ($request->has('grade')) {
-            $subjects = $subjects->appends(['grade' => 1]);
+            $paginatedAndGroupedSubjectList = $paginatedAndGroupedSubjectList->appends(['grade' => $request->grade]);
         }
 
         if ($request->expectsJson()) {
             return response()->json([
-                'subjects' => $subjects,
+                'subjects' => $paginatedAndGroupedSubjectList,
                 'search' => $request->search,
                 'grade' => $request->grade,
             ]);
         }
 
         return inertia('Subjects/Index', [
-            'subjects' => $subjects,
+            'subjects' => $paginatedAndGroupedSubjectList,
             'grades' => Grade::all(),
         ]);
     }

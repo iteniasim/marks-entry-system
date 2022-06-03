@@ -6,6 +6,7 @@ import { onMounted, onUpdated, ref, watch } from 'vue'
 import axios from 'axios'
 import PaginationComponent from '@/Components/PaginationComponent.vue'
 var debounce = require('lodash/debounce')
+var keys = require('lodash/keys')
 
 const pageTitle = 'Subjects'
 
@@ -86,32 +87,42 @@ watch(searchGrade, debounce(fetchSearchResults, 2000))
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
-                        <template v-if="subjectList.total">
-                            <tr
-                                v-for="(subject, index) in subjectList.data"
-                                :key="`subject-${index}`"
+                        <template v-if="keys(subjectList.data).length">
+                            <template
+                                v-for="(subjectGroup, gradeId) in subjectList.data"
+                                :key="`subject-${gradeId}`"
                             >
-                                <td class="px-3 py-2 whitespace-no-wrap">
-                                    {{ subject.name }}
-                                </td>
-                                <td class="px-3 py-2 whitespace-no-wrap">
-                                    {{ subject.grade.name }}
-                                </td>
-                                <td class="px-3 py-2 whitespace-no-wrap">
-                                    {{ subject.full_marks }}
-                                </td>
-                                <td class="px-3 py-2 whitespace-no-wrap">
-                                    {{ subject.pass_marks }}
-                                </td>
-                                <td class="flex items-center gap-4">
-                                    <Link class="btn btn-link" :href="route('subjects.edit', subject.id)">
-                                        <t-button>Edit</t-button>
-                                    </Link>
-                                    <Link class="btn btn-link" method="delete" as="button" type="button" :href="route('subjects.destroy', subject.id)">
-                                        <t-button>Delete</t-button>
-                                    </Link>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td colspan="5" class="text-center">
+                                        {{ props.grades.find(grade=>grade.id === parseInt(gradeId)).name }}
+                                    </td>
+                                </tr>
+                                <tr
+                                    v-for="(subject, index) in subjectGroup"
+                                    :key="`subject-${index}`"
+                                >
+                                    <td class="px-3 py-2 whitespace-no-wrap">
+                                        {{ subject.name }}
+                                    </td>
+                                    <td class="px-3 py-2 whitespace-no-wrap">
+                                        {{ subject.grade.name }}
+                                    </td>
+                                    <td class="px-3 py-2 whitespace-no-wrap">
+                                        {{ subject.full_marks }}
+                                    </td>
+                                    <td class="px-3 py-2 whitespace-no-wrap">
+                                        {{ subject.pass_marks }}
+                                    </td>
+                                    <td class="flex items-center gap-4">
+                                        <Link class="btn btn-link" :href="route('subjects.edit', subject.id)">
+                                            <t-button>Edit</t-button>
+                                        </Link>
+                                        <Link class="btn btn-link" method="delete" as="button" type="button" :href="route('subjects.destroy', subject.id)">
+                                            <t-button>Delete</t-button>
+                                        </Link>
+                                    </td>
+                                </tr>
+                            </template>
                         </template>
                         <tr v-else>
                             <td class="px-3 py-2 whitespace-no-wrap" colspan="5">
