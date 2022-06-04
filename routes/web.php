@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\MarkController;
@@ -56,6 +57,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('upgrade/grade', [UpgradeController::class, 'upgradeStudentsOfGrade'])->name('upgradeStudentsOfGrade');
 
     Route::get('/attendance/summary', [AttendanceController::class, 'attendanceSummary'])->name('attendance.summary');
+
+    Route::get('/backup', [BackupController::class, 'backupDatabase'])->name('database.backup');
 });
 
 require __DIR__ . '/auth.php';
