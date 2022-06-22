@@ -12,14 +12,29 @@ use App\Models\MarkGrading;
 use App\Models\Student;
 use App\Models\Subject;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class MarkController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $students = Student::whereHas('marks')
+            ->when($request->has('search'), function ($query) use ($request) {
+                return $query->where('name', 'like', '%' . $request->search . '%');
+            })
+            ->when($request->has('grade'), function ($query) use ($request) {
+                return $query->where('grade_id', $request->grade);
+            })
             ->with('grade')
             ->paginate(10);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'students' => $students,
+                'search' => $request->search,
+                'grade' => $request->grade,
+            ]);
+        }
 
         return inertia('Marks/Index', [
             'students' => $students,
@@ -37,18 +52,20 @@ class MarkController extends Controller
     {
         foreach ($request->obtained_marks as $subjectId => $obtainedMark) {
             $subject = Subject::whereId($subjectId)->firstOrFail();
-            Mark::updateOrCreate([
-                'student_id' => $request->student_id,
-                'subject_id' => $subject->id,
-                'exam_id' => $request->exam_id,
-                'grade_id' => $request->grade_id,
-                'year' => Carbon::now()->format('Y'),
-            ],
+            Mark::updateOrCreate(
+                [
+                    'student_id' => $request->student_id,
+                    'subject_id' => $subject->id,
+                    'exam_id' => $request->exam_id,
+                    'grade_id' => $request->grade_id,
+                    'year' => Carbon::now()->format('Y'),
+                ],
                 [
                     'full_marks' => $subject->full_marks,
                     'pass_marks' => $subject->pass_marks,
                     'obtained_marks' => $obtainedMark,
-                ]);
+                ]
+            );
         }
 
         $this->saveAttendance($request);
@@ -133,15 +150,17 @@ class MarkController extends Controller
 
     public function saveAttendance($request)
     {
-        return AttendanceSummary::updateOrCreate([
-            'student_id' => $request->student_id,
-            'grade_id' => $request->grade_id,
-            'exam_id' => $request->exam_id,
-            'year' => Carbon::now()->format('Y'),
-        ],
+        return AttendanceSummary::updateOrCreate(
+            [
+                'student_id' => $request->student_id,
+                'grade_id' => $request->grade_id,
+                'exam_id' => $request->exam_id,
+                'year' => Carbon::now()->format('Y'),
+            ],
             [
                 'absent_days' => $request->absent_days ?? 0,
                 'present_days' => $request->present_days ?? 0,
-            ]);
+            ]
+        );
     }
 }
