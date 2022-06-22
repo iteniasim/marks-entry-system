@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateGradeRequest;
 use App\Models\Grade;
 use App\Models\Student;
 use App\Models\Subject;
+use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
@@ -15,9 +16,21 @@ class GradeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $grade = Grade::paginate(10);
+        $grade = Grade::whereNotNull('id');
+        if ($request->withoutPagination) {
+            $grade = $grade->get();
+        } else {
+            $grade = $grade->paginate(10);
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'grades' => $grade,
+            ]);
+        }
+
         return inertia('Grades/Index', [
             'grades' => $grade,
         ]);
