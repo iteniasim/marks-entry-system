@@ -415,7 +415,7 @@ const printResultSummary = () => {
 
                                 <!-- MarkSheet List -->
                                 <div v-if="markList">
-                                    <div>
+                                    <div v-if="showMarkSheets">
                                         <div class="flex justify-end gap-4">
                                             <t-button id="print-all-button" v-print="{ id: 'all-mark-sheet-wrapper', popTitle: 'MarkSheet' }">
                                                 Print All
@@ -444,11 +444,7 @@ const printResultSummary = () => {
                                         </div>
                                     </div>
 
-                                    <br />
-                                    <hr />
-                                    <br />
-
-                                    <div>
+                                    <div v-if="showSummary" class="mt-5">
                                         <MarksSummaryLayout
                                             :print-id="`mark-summary-print`"
                                             :grade="grades.find((grade)=>grade.id == printSummary.grade_id)"
