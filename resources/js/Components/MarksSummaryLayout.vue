@@ -58,7 +58,6 @@ const averagePercentage = (studentMarkList) => {
                                     >
                                         {{ subject.name }}
                                     </th>
-                                    <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">GPA</th>
                                     <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Percentage</th>
                                     <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Rank</th>
                                     <th class="px-3 py-2 font-semibold text-left bg-gray-100 border-b">Attendance</th>
@@ -79,9 +78,6 @@ const averagePercentage = (studentMarkList) => {
                                             :key="`subject-index-${index}-id-${subject.id}-header`"
                                         >
                                             {{ studentMarkGroup.find(markItem=>markItem.subject_id == subject.id).obtained_marks }}
-                                        </td>
-                                        <td>
-                                            {{ averageGpa(studentMarkGroup).gpa }}
                                         </td>
                                         <td>
                                             {{ averagePercentage(studentMarkGroup) }}
