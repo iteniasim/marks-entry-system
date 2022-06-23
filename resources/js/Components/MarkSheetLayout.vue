@@ -126,7 +126,7 @@ onMounted(async () => {
                                         </td>
                                         <td class="px-3 py-2 whitespace-no-wrap">
                                             <div v-if="props.exam.is_final">
-                                                {{ finalMarkForSubject(mark.subject) }} ({{ averageGpa([mark]).grade }})
+                                                {{ props.gradeDisplay ? averageGpa([mark]).grade : finalMarkForSubject(mark.subject) }}
                                             </div>
                                             <div v-else>
                                                 --
