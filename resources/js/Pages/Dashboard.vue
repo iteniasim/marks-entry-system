@@ -38,6 +38,12 @@ const printResult = ref({
     year: null,
 })
 
+const printSummary = ref({
+    grade_id: null,
+    exam_id: null,
+    year: null,
+})
+
 const markForm = useForm({
     student_id: null,
     exam_id: null,
@@ -62,6 +68,10 @@ const gpaDetails = ref(null)
 const subjectsOfGrade = ref([])
 
 const gradeDisplay = ref(true)
+
+const showSummary = ref(false)
+
+const showMarkSheets = ref(false)
 
 const openMarksEntryModal = (studentId, examId) => {
     let selectedStudent = studentList.value.data.find(student => student.id === studentId)
@@ -141,8 +151,8 @@ const searchStudent = () => {
     })
 }
 
-const searchStudentResults = () => {
-    return axios.get(route('year.exam.grade.marks', { year: printResult.value.year, exam: printResult.value.exam_id, grade: printResult.value.grade_id })).then((res) => {
+const searchStudentResults = (year, examId, gradeId) => {
+    return axios.get(route('year.exam.grade.marks', { year: year, exam: examId, grade: gradeId })).then((res) => {
         studentList.value = null
 
         markList.value = res.data.marks
@@ -151,18 +161,18 @@ const searchStudentResults = () => {
     })
 }
 
-const searchResults = () => {
-    searchStudentResults()
-}
-
 const printAllResults = () => {
-    searchStudentResults().then(() => {
+    searchStudentResults(printResult.value.year, printResult.value.exam_id, printResult.value.grade_id).then(() => {
+        showMarkSheets.value = true
+        showSummary.value = false
         document.getElementById('print-all-button').click()
     })
 }
 
 const printResultSummary = () => {
-    searchStudentResults().then(() => {
+    searchStudentResults(printSummary.value.year, printSummary.value.exam_id, printSummary.value.grade_id).then(() => {
+        showMarkSheets.value = false
+        showSummary.value = true
         document.getElementById('print-summary-button').click()
     })
 }
@@ -196,7 +206,7 @@ const printResultSummary = () => {
                                             </label>
                                             <t-rich-select
                                                 :options="props.grades" v-model="studentSearch.grade"
-                                                name="grade" placeholder="Select Grade" value-attribute="id"
+                                                name="grade" placeholder="Select Class" value-attribute="id"
                                                 text-attribute="name"
                                             />
                                         </div>
@@ -208,12 +218,12 @@ const printResultSummary = () => {
                                     </form>
                                 </div>
 
-                                <!-- result search box -->
+                                <!-- print result box -->
                                 <div class="p-2 my-4 border">
                                     <div class="text-lg font-semibold">
                                         Print Results
                                     </div>
-                                    <form @submit.prevent="searchStudentResults" method="get" class="grid grid-rows-5">
+                                    <form class="grid grid-rows-5">
                                         <div>
                                             <div class="items-center justify-center">
                                                 <label class="label">
@@ -221,7 +231,7 @@ const printResultSummary = () => {
                                                 </label>
                                                 <t-rich-select
                                                     :options="props.grades" v-model="printResult.grade_id"
-                                                    name="grade_id" placeholder="Select Grade" value-attribute="id"
+                                                    name="grade_id" placeholder="Select Class" value-attribute="id"
                                                     text-attribute="name"
                                                 />
                                             </div>
@@ -244,26 +254,73 @@ const printResultSummary = () => {
                                             </label>
                                             <t-rich-select
                                                 :options="years" v-model="printResult.year"
-                                                name="year" placeholder="Select Grade"
+                                                name="year" placeholder="Select Year"
                                             />
                                         </div>
                                         <div class="flex items-center justify-between gap-4">
-                                            <t-button @click.prevent="searchResults">
-                                                Search
-                                            </t-button>
-                                            <div class="grid grid-cols-12">
-                                                <div class="col-span-9 ml-4">
+                                            <div class="flex flex-col items-center justify-center">
+                                                <div class="ml-4">
                                                     {{ gradeDisplay ? "Show Grade" : "Show Marks" }}
                                                 </div>
-                                                <div class="col-span-3">
+                                                <div class="">
                                                     <t-toggle v-model="gradeDisplay" />
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="flex items-center justify-between">
                                             <t-button @click.prevent="printAllResults" class="mt-8">
                                                 Print All
                                             </t-button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- print summary box -->
+                                <div class="p-2 my-4 border">
+                                    <div class="text-lg font-semibold">
+                                        Print Summary
+                                    </div>
+                                    <form class="grid grid-rows-5">
+                                        <div>
+                                            <div class="items-center justify-center">
+                                                <label class="label">
+                                                    <span class="label-text">Class</span>
+                                                </label>
+                                                <t-rich-select
+                                                    :options="props.grades" v-model="printSummary.grade_id"
+                                                    name="grade_id" placeholder="Select Class" value-attribute="id"
+                                                    text-attribute="name"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div>
+                                                <label class="label">
+                                                    <span class="label-text">Term</span>
+                                                </label>
+                                                <t-rich-select
+                                                    :options="props.exams" v-model="printSummary.exam_id"
+                                                    name="exam_id" placeholder="Select Exam" value-attribute="id"
+                                                    text-attribute="name"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="label">
+                                                <span class="label-text">Year</span>
+                                            </label>
+                                            <t-rich-select
+                                                :options="years" v-model="printSummary.year"
+                                                name="year" placeholder="Select Year"
+                                            />
+                                        </div>
+                                        <div class="flex items-center justify-between gap-4">
+                                            <div class="flex flex-col items-center justify-center">
+                                                <div class="ml-4">
+                                                    {{ gradeDisplay ? "Show Grade" : "Show Marks" }}
+                                                </div>
+                                                <div class="">
+                                                    <t-toggle v-model="gradeDisplay" />
+                                                </div>
+                                            </div>
                                             <t-button @click.prevent="printResultSummary" class="mt-8">
                                                 Print Summary
                                             </t-button>
@@ -394,8 +451,8 @@ const printResultSummary = () => {
                                     <div>
                                         <MarksSummaryLayout
                                             :print-id="`mark-summary-print`"
-                                            :grade="grades.find((grade)=>grade.id == printResult.grade_id)"
-                                            :exam="exams.find((exam)=>exam.id == printResult.exam_id)"
+                                            :grade="grades.find((grade)=>grade.id == printSummary.grade_id)"
+                                            :exam="exams.find((exam)=>exam.id == printSummary.exam_id)"
                                             :subjects="_.uniqBy(markList.map(eachMark=>{ return eachMark.subject }), 'id')"
                                             :marks="markList"
                                             :gpa-details="gpaDetails"
